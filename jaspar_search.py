@@ -20,7 +20,7 @@ def parse_options():
 
     """
 
-    parser = optparse.OptionParser("%prog -f <fasta_file> -j <jaspar_matrix_id> -m <meme_dir> -p <profiles_dir> [--dummy=<dummy_dir> -o <output_dir> -r <results_dir> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh>]")
+    parser = optparse.OptionParser("./%prog -f <fasta_file> -j <jaspar_matrix_id> -m <meme_dir> -p <profiles_dir> [--dummy=<dummy_dir> -o <output_dir> -r <results_dir> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh>]")
 
     parser.add_option("--dummy", default="/tmp/", action="store", type="string", dest="dummy_dir", help="Dummy directory (default = /tmp/)", metavar="<dummy_dir>")
     parser.add_option("-f", action="store", type="string", dest="fasta_file", help="FASTA file (e.g. chr1.fa)", metavar="<fasta_file>")

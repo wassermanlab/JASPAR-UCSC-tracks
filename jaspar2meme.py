@@ -18,7 +18,7 @@ def parse_options():
 
     """
 
-    parser = optparse.OptionParser("%prog -m <meme_dir> [-b <jaspar_bundle> --dummy=<dummy_dir> -o <output_dir> -t <tax_groups>]")
+    parser = optparse.OptionParser("./%prog -m <meme_dir> [-b <jaspar_bundle> --dummy=<dummy_dir> -o <output_dir> -t <tax_groups>]")
 
     parser.add_option("-b", action="store", type="string", dest="jaspar_bundle", help="JASPAR bundle (file containing many JASPAR profiles)", metavar="<jaspar_bundle>")
     parser.add_option("--dummy", default="/tmp/", action="store", type="string", dest="dummy_dir", help="Dummy directory (default = /tmp/)", metavar="<dummy_dir>")

@@ -1,6 +1,8 @@
-# 1. Reformat 
-* Downloaded repository under `./scripts/`
-* Configure `Parameters` and `Paths` in `./scripts/config.ini`
+# 1. Reformat JASPAR profiles
+## to PFMs:
+`./jaspar2pfm.py -b ./files/JASPAR2018_CORE_vertebrates.txt -o $PROFILES_DIR`
+## to MEME motifs:
+`./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
 
 # 2. Download files
 ## PDB:

@@ -16,7 +16,7 @@ def parse_options():
 
     """
 
-    parser = optparse.OptionParser("%prog -i <input_dir> -p <profiles_dir> [-c <chr> --dummy=<dummy_dir> -f <format> -m <matrix_id> -o <output_file> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh> -s <scores>]")
+    parser = optparse.OptionParser("./%prog -i <input_dir> -p <profiles_dir> [-c <chr> --dummy=<dummy_dir> -f <format> -m <matrix_id> -o <output_file> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh> -s <scores>]")
 
     parser.add_option("-c", action="store", type="string", dest="chr", help="Chromosome (reports TFBSs for the given chromosome; i.e. 1-22, X, Y and M; provide multiple chromosomes using commas e.g. \"chr2\"; default = None)", metavar="<chr>")
     parser.add_option("--dummy", default="/tmp/", action="store", type="string", dest="dummy_dir", help="Dummy directory (default = /tmp/)", metavar="<dummy_dir>")

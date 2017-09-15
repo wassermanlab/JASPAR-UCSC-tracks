@@ -18,7 +18,7 @@ def parse_options():
 
     """
 
-    parser = optparse.OptionParser("%prog [-b <jaspar_bundle> -o <output_dir> -t <tax_groups>]")
+    parser = optparse.OptionParser("./%prog [-b <jaspar_bundle> -o <output_dir> -t <tax_groups>]")
 
     parser.add_option("-b", action="store", type="string", dest="jaspar_bundle", help="JASPAR bundle (file containing many JASPAR profiles)", metavar="<jaspar_bundle>")
     parser.add_option("-o", default="./", action="store", type="string", dest="output_dir", help="Output directory (default = ./)", metavar="<output_dir>")
