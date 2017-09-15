@@ -1,14 +1,16 @@
-# 1. Reformat JASPAR profiles
-## to PFMs:
+# JASPAR 2018 pipeline for creating UCSC Genome Browser track data hubs
+
+## 1. Reformat JASPAR profiles
+### to PFMs:
 `./jaspar2pfm.py -b ./files/JASPAR2018_CORE_vertebrates.txt -o $PROFILES_DIR`
-## to MEME motifs:
+### to MEME motifs:
 `./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
 
-# 2. Scanning of the human genome
+## 2. Scanning of the human genome
 `./jaspar_search.py -f $GENOME_FASTA -j $JASPAR_MATRIX_ID -m $MEME_DIR -o $SCANS_DIR -p $PROFILES_DIR`
 
-# 3. Create a BED file
+## 3. Create a BED file
 `./fetch_binding_sites.py -i $SCANS_DIR -p $PROFILES_DIR > $BED_FILE`
 
-# 4. Create a UCSC Genome Browser bigBed track file
+## 4. Create a UCSC Genome Browser bigBed track file
 `./fetch_binding_sites.py -i $SCANS_DIR -p $PROFILES_DIR > $BED_FILE`
