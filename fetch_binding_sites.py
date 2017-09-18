@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 import os, sys, re
+from Bio import motifs
 import optparse
 
 # Import my functions #
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     options = parse_options()
 
     # Initialize #
-    motifs = {}
+    profiles = {}
     delimiter = "\t"
     if options.format == "csv": delimiter = ","
     # Write #
@@ -78,19 +79,19 @@ if __name__ == "__main__":
         # Skip file if wrong chromosome #
         if options.chr is not None:
             if chromosome not in options.chr.split(","): continue
-        # If no motif for matrix id... #
-        if matrix_id not in motifs:
-            # Load motif #
+        # If no profile for matrix id... #
+        if matrix_id not in profiles:
+            # Load profile #
             with open(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % matrix_id)) as f:
-                # Add motif to motifs #
-                motifs.setdefault(matrix_id, motifs.read(f, "pfm"))
+                # Add profile to profiles #
+                profiles.setdefault(matrix_id, motifs.read(f, "pfm"))
         # For each line...
         for line in functions.parse_tsv_file(os.path.join(os.path.abspath(options.input_dir), file_name), gz=True):
             # Initialize #
             position = int(line[0])
             start = position
             if options.format == "bed": start -= 1 # convert to BED format (0-based)
-            end = position + motifs[matrix_id].length - 1
+            end = position + profiles[matrix_id].length - 1
             strand = line[1]
             rel_score = float(line[2]) / 1000  # transform back to the original relative score (between 0 and 1)
             p_value =  10 ** (-10 * (float(line[3]) / 1000)) # transform back to the original p-value (between 0 and 1)
@@ -106,5 +107,5 @@ if __name__ == "__main__":
             # If both relative scores and p-values are required... #
             else: score = delimiter.join([line[2], line[3]])
             # Write #
-            functions.write(options.output_file, delimiter.join(map(str, [chromosome, start, end, motifs[matrix_id].name, score, strand])))
+            functions.write(options.output_file, delimiter.join(map(str, [chromosome, start, end, profiles[matrix_id].name, score, strand])))
 

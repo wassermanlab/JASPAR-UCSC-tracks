@@ -105,9 +105,9 @@ if __name__ == "__main__":
     dummy_fasta = os.path.join(os.path.abspath(options.dummy_dir), "%s.fa" % os.getpid())
     pfm_file = os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % options.matrix_id)
 
-    # Load motif #
+    # Load profile #
     with open(pfm_file) as f:
-        motif = motifs.read(f, "pfm")
+        profile = motifs.read(f, "pfm")
 
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
@@ -129,7 +129,7 @@ if __name__ == "__main__":
                 continue
         # Get chunks #
         m = 10000;
-        n = len(motif) - 1
+        n = len(profile) - 1
         chunks = [sequence[i:i+m] for i in range(0, len(sequence), m - n)]
         # If last chunk is too small, merge it to the previous #
         if len(chunks[-1]) <= n: last_chunk = chunks.pop(-1); chunks[-1] += last_chunk
