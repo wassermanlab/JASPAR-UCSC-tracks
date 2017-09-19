@@ -32,6 +32,6 @@ TFBS predictions were converted to [BED format](https://genome.ucsc.edu/FAQ/FAQf
 `./fetch_binding_sites.py -i $SCANS_DIR -p $PROFILES_DIR | sort -k1,1 -k2,2n > $BED_FILE`
 
 ### Create a UCSC Genome Browser bigBed track file
-Finally, BED files were converted to [bigBed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1.5) for visualization in the UCSC Genome Browser using [UCSC binaries for standalone command-line use](http://hgdownload.cse.ucsc.edu/admin/exe/).
+Finally, BED files were converted to [bigBed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1.5) for visualization in the UCSC Genome Browser using [bedToBigBed](http://hgdownload.cse.ucsc.edu/admin/exe/), as distributed within the UCSC binaries for standalone command-line use.
 
 `bedToBigBed -type=bed6 -tab $BED_FILE $CHROM_SIZES $BIGBED_FILE`
