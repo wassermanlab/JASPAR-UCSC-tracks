@@ -32,7 +32,7 @@ def parse_options():
 
     (options, args) = parser.parse_args()
 
-    if options.input_dir is None or options.input_dir is None:
+    if options.input_dir is None or options.profiles_dir is None:
         parser.error("missing arguments: type option \"-h\" for help")
 
     if options.chr is not None:
