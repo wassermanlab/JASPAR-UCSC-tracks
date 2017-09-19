@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python2.
 import os
 from Bio import motifs
 from numpy import log10 as log
