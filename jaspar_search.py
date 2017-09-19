@@ -116,6 +116,8 @@ if __name__ == "__main__":
         output_file = os.path.join(os.path.abspath(options.output_dir), "%s.%s.tab.gz" % (options.matrix_id, header))
         # Remove dummy file if exist #
         if os.path.exists(dummy_file): os.remove(dummy_file)
+        # Create an empty dummy file #
+        process = subprocess.call(["touch", dummy_file])
         # Skip if output file already exists #
         if os.path.exists(output_file): continue
         # If output file exists in a previous JASPAR release... #
@@ -159,3 +161,4 @@ if __name__ == "__main__":
             functions.compress(dummy_file, output_file)
             # Remove dummy file #
             os.remove(dummy_file)
+            
