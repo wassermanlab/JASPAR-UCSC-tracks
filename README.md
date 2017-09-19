@@ -28,7 +28,7 @@ For each TF binding profile, the human DNA sequence (in [FASTA](https://en.wikip
 `./jaspar_search.py -f $GENOME_FASTA -j $JASPAR_MATRIX_ID -m $MEME_DIR -o $SCANS_DIR -p $PROFILES_DIR`
 
 ### Create a sorted BED file
-TFBS predictions were converted to [BED format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1). As scores (column 5), we used FIMO *p*-values (scaled between 0-1000, where 0 corresponds to *p*-value = 1, 600 to *p*-value = 10<sup>-6</sup>, and 1000 to *p*-value ≤ 10<sup>-10</sup>) to allow for comparison of prediction confidence between different profiles.
+TFBS predictions were converted to [BED format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1). As scores (column 5), we used FIMO *p*-values (scaled between 0-1000, where 0 corresponds to *p*-value = 1 and 1000 to *p*-value ≤ 10<sup>-10</sup>) to allow for comparison of prediction confidence between different profiles.
 
 `./fetch_binding_sites.py -i $SCANS_DIR -p $PROFILES_DIR | sort -k1,1 -k2,2n > $BED_FILE`
 
