@@ -1,7 +1,7 @@
 # JASPAR UCSC tracks
-For the 2018 release of JASPAR, we have performed TFBS predictions on the human genome (hg19 and hg38 assemblies) using the CORE vertebrates TF binding profiles, which are publicly available as UCSC Genome Browser track data hubs:
-* [hg19](http://www.google.com) assembly
-* [hg38](http://www.google.com) assembly
+For the 2018 release of [JASPAR](http://jaspar2018.genereg.net/), we have performed TFBS predictions on the human genome (hg19 and hg38 assemblies) using the [CORE vertebrates TF binding profiles](http://jaspar2018.genereg.net/collection/core/), which are publicly available as UCSC Genome Browser track data hubs:
+* [hg19 assembly](http://www.google.com)
+* [hg38 assembly](http://www.google.com)
 
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
