@@ -1,7 +1,7 @@
 # JASPAR UCSC tracks
-For the 2018 release of JASPAR, we have performed TFBS predictions on the human genome (hg19 and hg38 assemblies) using the CORE vertebrates TF binding profiles, which are publicly available as UCSC Genome Browser track data hubs:
-* [hg19](http://www.google.com)
-* [hg38](http://www.google.com)
+For the 2018 release of [JASPAR](http://jaspar2018.genereg.net/), we have scanned the human genome for TF binding sites (TFBS) using the [CORE vertebrates TF binding profiles](http://jaspar2018.genereg.net/collection/core/). The predictions are publicly available as UCSC Genome Browser track data hubs:
+* [hg19 assembly](http://www.google.com)
+* [hg38 assembly](http://www.google.com)
 
 # Usage
 We generated custom UCSC Genome Browser track data hubs containing genome-wide TFBS predictions for TF binding profiles in the JASPAR CORE vertebrates collection. Specifically, for each profile, the human genome assemblies [hg19](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/) and [hg38](http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/) were scanned in parallel using the [TFBS Perl module](http://tfbs.genereg.net) and [FIMO](http://meme-suite.org/doc/fimo.html), as distributed within the [MEME suite](http://meme-suite.org/meme-software/4.11.2/meme_4.11.2_2.tar.gz) (version 4.11.2).
@@ -28,4 +28,4 @@ TFBS predictions were converted to [BED format](https://genome.ucsc.edu/FAQ/FAQf
 ## Step 4. Create a UCSC Genome Browser bigBed track file
 Finally, BED files were converted to [bigBed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1.5) for visualization in the UCSC Genome Browser using [UCSC binaries for standalone command-line use](http://hgdownload.cse.ucsc.edu/admin/exe/).
 
-`bedToBigBed -type=bed6 -tab $BED_FILE $CHROM_SIZES $BIGBED_FILE`
+`bedToBigBed -type=bed6 -tab -extraIndex=name $BED_FILE $CHROM_SIZES $BIGBED_FILE`
