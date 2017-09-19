@@ -5,15 +5,9 @@ For the 2018 release of JASPAR, we have performed TFBS predictions on the human 
 
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
-* Python (>2.7) with *Biopython* () and *numpy* (≥1.10.0) libraries
-*
-*
-The bowtie2 mapper
-
-R with the RColorBrewer and ggplot2 packages
-g++ compiler
-Samtools (>1.0)
-Unix sort (which support -V option) is required ! For Mac OS user, please install the GNU core utilities !
+* [MEME](http://meme-suite.org/doc/overview.html) suite (≥4.12.0)
+* Python (>2.7) with *Biopython* (≥1.65) and *numpy* (≥1.8.2) libraries
+* [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
 ## Usage
 We generated custom UCSC Genome Browser track data hubs containing genome-wide TFBS predictions for TF binding profiles in the JASPAR CORE vertebrates collection. Specifically, for each profile, the human genome assemblies [hg19](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/) and [hg38](http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/) were scanned in parallel using the [TFBS Perl module](http://tfbs.genereg.net) and [FIMO](http://meme-suite.org/doc/fimo.html), as distributed within the [MEME suite](http://meme-suite.org/meme-software/4.11.2/meme_4.11.2_2.tar.gz) (version 4.11.2).

@@ -24,8 +24,8 @@ jaspar_search.pl
   -db               = JASPAR database name. DEFAULT = JASPAR_2016
   -th threshold     = Minimum score of putative TFBS hit to report.
                       Specify as an absolute score, i.e. 14.1 or as
-                      a relative score, i.e. 75%.
-                      DEFAULT = 75%
+                      a relative score, i.e. 80%.
+                      DEFAULT = 80%
   -o out_file       = Output file to which to write TFBS hits. If not
                       provided, write to stdout.
 
