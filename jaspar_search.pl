@@ -40,12 +40,11 @@ are written to the output file if provided or to standard output otherwise.
 
   David Arenillas
   Wasserman Lab
-  Centre for Molecular Medicine and Therapeutics
   University of British Columbia
   
   E-mail: dave@cmmt.ubc.ca
   
-  Edited by Oriol Fornes on July 5, 2017
+  Edited by Oriol Fornes @ Wasserman Lab on Sep 19, 2017
 
 =cut
 
@@ -56,61 +55,33 @@ use Bio::SeqIO;
 use Getopt::Long;
 use Pod::Usage;
 use TFBS::Matrix::PFM;
-use TFBS::DB::JASPAR;
 
-use constant JASPAR_DB_NAME => "JASPAR_2016";
-use constant JASPAR_DB_HOST => "vm5.cmmt.ubc.ca";
-use constant JASPAR_DB_USER => "jaspar_r";
-use constant JASPAR_DB_PASS => "";
-
-use constant TFBS_THRESHOLD => "75%";
+use constant TFBS_THRESHOLD => "80%";
 
 my $fasta_file;
-my $jaspar_db;
-my $matrix_id;
 my $matrix_file;
-my $matrix_name;
 my $threshold;
 my $out_file;
 GetOptions(
     'f=s'     => \$fasta_file,
-    'db=s'    => \$jaspar_db,
-    'id=s'    => \$matrix_id,
     'm=s'     => \$matrix_file,
-    'n=s'     => \$matrix_name,
     'th=s'    => \$threshold,
     'o=s'     => \$out_file
 );
 
-$jaspar_db  = JASPAR_DB_NAME if !$jaspar_db;
 $threshold  = TFBS_THRESHOLD if !defined $threshold;
 
-unless ($matrix_id || $matrix_file || $matrix_name) {
+unless ($matrix_file) {
     pod2usage(
         -verbose => 1,
-        -msg => "Please provide either a matrix name or ID"
+        -msg => "Please provide a matrix file (e.g. MA0002.2.pfm)"
     );
 }
 
-my $pfm;
+# Load PFM
+my $pfm = TFBS::Matrix::PFM->new('-matrixfile', $matrix_file);
 
-if ($matrix_file) {
-    $pfm = TFBS::Matrix::PFM->new('-matrixfile', $matrix_file);
-} else {
-    my $db = TFBS::DB::JASPAR7->connect(
-        "dbi:mysql:" . $jaspar_db . ":" . JASPAR_DB_HOST,
-        JASPAR_DB_USER, JASPAR_DB_PASS);
-    die "Error connecting to JASPAR database\n" if !$db;
-
-    if ($matrix_id) {
-        $pfm = $db->get_Matrix_by_ID($matrix_id, 'PFM');
-        die "Error retrieving TFBS matrix from JASPAR\n" if !$pfm;
-    } elsif ($matrix_name) {
-        $pfm = $db->get_Matrix_by_name($matrix_name, 'PFM');
-        die "Error retrieving TFBS matrix from JASPAR\n" if !$pfm;
-    }
-}
-
+# Transform to PWM
 my $pwm = $pfm->to_PWM;
 die "Error converting PFM to PWM\n" if !$pwm;
 

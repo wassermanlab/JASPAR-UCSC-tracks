@@ -1,29 +1,29 @@
 import os, sys, re
-from Bio.motifs.jaspar.db import JASPAR5
+#from Bio.motifs.jaspar.db import JASPAR5
 import gzip
 import shutil
 
-def get_jaspar_profiles(matrix_id=None):
-    """
-    @input:
-    matrix_id {str} e.g. MA0002.2
-    file_name {filename} e.g. pfm_vertebrates.txt
-    @return:
-    {motif} or {list} of {motifs} if matrix_id is None
-
-    """
-
-    JASPAR_DB_HOST = 'vm5.cmmt.ubc.ca'
-    JASPAR_DB_NAME = 'JASPAR_2016'
-    JASPAR_DB_USER = 'jaspar_r'
-    JASPAR_DB_PASS = ''
-    
-    jaspar_db = JASPAR5(host=JASPAR_DB_HOST, name=JASPAR_DB_NAME, user=JASPAR_DB_USER, password=JASPAR_DB_PASS)
-
-    if matrix_id is None:
-        return jaspar_db.fetch_motifs(collection='CORE')
-    
-    return jaspar_db.fetch_motif_by_id(matrix_id)
+#def get_jaspar_profiles(matrix_id=None):
+#    """
+#    @input:
+#    matrix_id {str} e.g. MA0002.2
+#    file_name {filename} e.g. pfm_vertebrates.txt
+#    @return:
+#    {motif} or {list} of {motifs} if matrix_id is None
+#
+#    """
+#
+#    JASPAR_DB_HOST = 'vm5.cmmt.ubc.ca'
+#    JASPAR_DB_NAME = 'JASPAR_2016'
+#    JASPAR_DB_USER = 'jaspar_r'
+#    JASPAR_DB_PASS = ''
+#    
+#    jaspar_db = JASPAR5(host=JASPAR_DB_HOST, name=JASPAR_DB_NAME, user=JASPAR_DB_USER, password=JASPAR_DB_PASS)
+#
+#    if matrix_id is None:
+#        return jaspar_db.fetch_motifs(collection='CORE')
+#    
+#    return jaspar_db.fetch_motif_by_id(matrix_id)
 
 def parse_file(file_name, gz=False):
     """
