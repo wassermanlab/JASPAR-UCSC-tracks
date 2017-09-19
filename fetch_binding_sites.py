@@ -84,7 +84,7 @@ if __name__ == "__main__":
             # Load profile #
             with open(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % matrix_id)) as f:
                 # Add profile to profiles #
-                profiles.setdefault(matrix_id, motifs.read(f, "pfm"))
+                profiles.setdefault(matrix_id, motifs.read(f, "jaspar"))
         # For each line...
         for line in functions.parse_tsv_file(os.path.join(os.path.abspath(options.input_dir), file_name), gz=True):
             # Initialize #

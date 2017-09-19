@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     # Load profile #
     with open(pfm_file) as f:
-        profile = motifs.read(f, "pfm")
+        profile = motifs.read(f, "jaspar")
 
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):

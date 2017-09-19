@@ -58,9 +58,9 @@ if __name__ == "__main__":
     if options.jaspar_bundle is not None:
         # Initialize #
         dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "bundle.txt")
-        motifs = {}
+        profiles = {}
         header = []
-        motif = None
+        profile = None
         # If dummy file exists #
         if os.path.exists(dummy_file): os.remove(dummy_file)
         # For each line... #
@@ -74,42 +74,42 @@ if __name__ == "__main__":
                 m = re.search("^\s*(\w)\s*\[(.+)\]\s*$", line)
                 # Write #
                 if m: functions.write(dummy_file, "%s" % " ".join(map(str, [int(float(i)) for i in re.findall("[+-]?[0-9]*[.]?[0-9]+", m.group(2))])))
-        # Reformat JASPAR profiles to MEME motifs #
+        # Reformat JASPAR profiles to MEME profiles #
         process =  subprocess.check_output([os.path.join(os.path.abspath(options.meme_dir), "jaspar2meme"), "-bundle", dummy_file], stderr=subprocess.STDOUT)
         # For each line... #
         for line in process.split("\n"):
             if line.startswith("MOTIF"):
                 # Initialize #
-                motif = re.search("^MOTIF (MA\d{4}.\d{1}) \S+$", line)
-                motifs.setdefault(motif.group(1), [])
-                motifs[motif.group(1)] += header
-            try: motifs[motif.group(1)].append(line)
-            except: header.append(line) # no motif
+                profile = re.search("^MOTIF (MA\d{4}.\d{1}) \S+$", line)
+                profiles.setdefault(profile.group(1), [])
+                profiles[profile.group(1)] += header
+            try: profiles[profile.group(1)].append(line)
+            except: header.append(line) # no profile
         # Write JASPAR profiles in MEME format #
-        for motif in sorted(motifs):
+        for profile in sorted(profiles):
             # Skip if MEME file already exists #
-            meme_file = os.path.join(os.path.abspath(options.output_dir), "%s.meme" % motif)
+            meme_file = os.path.join(os.path.abspath(options.output_dir), "%s.meme" % profile)
             if not os.path.exists(meme_file):
                 # Write #
-                functions.write(meme_file, "\n".join(motifs[motif]))
+                functions.write(meme_file, "\n".join(profiles[profile]))
     # ... Else... #
     else:
-        # For each motif... #
-        for motif in functions.get_jaspar_profiles():
+        # For each profile... #
+        for profile in functions.get_jaspar_profiles():
             # Skip if invalid taxa #
-            if motif.tax_group not in options.tax_groups: continue
+            if profile.tax_group not in options.tax_groups: continue
             # Skip if JASPAR file already exists #
-            jaspar_file = os.path.join(os.path.abspath(options.output_dir), "%s.transfac" % motif.matrix_id)
+            jaspar_file = os.path.join(os.path.abspath(options.output_dir), "%s.transfac" % profile.matrix_id)
             if not os.path.exists(jaspar_file):
                 # Initialize #
-                functions.write(jaspar_file, "ID %s" % motif.matrix_id)
-                functions.write(jaspar_file, "BF %s" % motif.tax_group)
-                # Save JASPAR motif in TRANSFAC format #
-                functions.write(jaspar_file, motifs.write([motif], format="transfac"))
+                functions.write(jaspar_file, "ID %s" % profile.matrix_id)
+                functions.write(jaspar_file, "BF %s" % profile.tax_group)
+                # Save JASPAR profile in TRANSFAC format #
+                functions.write(jaspar_file, motifs.write([profile], format="transfac"))
             # Skip if MEME file already exists #
-            meme_file = os.path.join(os.path.abspath(options.output_dir), "%s.meme" % motif.matrix_id)
+            meme_file = os.path.join(os.path.abspath(options.output_dir), "%s.meme" % profile.matrix_id)
             if not os.path.exists(meme_file):
-                # Reformat JASPAR profile to MEME motif #
+                # Reformat JASPAR profile to MEME profile #
                 process =  subprocess.check_output([os.path.join(os.path.abspath(options.meme_dir), "transfac2meme"), jaspar_file], stderr=subprocess.STDOUT)
                 # For each line... #
                 for line in process.split("\n"):

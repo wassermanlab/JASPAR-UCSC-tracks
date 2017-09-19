@@ -1,6 +1,5 @@
 #!/usr/bin/env python2.7
 import os, re
-from Bio import motifs
 import optparse
 import subprocess
 
