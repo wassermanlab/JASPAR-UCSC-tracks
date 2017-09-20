@@ -25,7 +25,7 @@ def parse_options():
     parser.add_option("-i", action="store", type="string", dest="input_dir", help="Input directory with TFBSs matches (i.e. output directory from jaspar_search.py)", metavar="<input_dir>")
     parser.add_option("-m", action="store", type="string", dest="matrix_id", help="Matrix ID (reports TFBSs for the given matrix id; e.g. \"MA0002.2\"; provide multiple matrix ids using commas; default = None)", metavar="<matrix_id>")
     parser.add_option("-o", action="store", type="string", dest="output_file", help="Output file (default = stdout)", metavar="<output_file>")
-    parser.add_option("-p", action="store", type="string", dest="profiles_dir", help="Profiles directory (from jaspar2meme.py)", metavar="<profiles_dir>")
+    parser.add_option("-p", action="store", type="string", dest="profiles_dir", help="Profiles directory (from jaspar2pfm.py)", metavar="<profiles_dir>")
     parser.add_option("--pv-thresh", default=0.05, action="store", type="float", dest="p_value_thresh", help="P-value threshold (reports TFBSs over the given threshold; default = 0.05)", metavar="<p_value_thresh>")
     parser.add_option("--rs-thresh", default=0.8, action="store", type="float", dest="rel_score_thresh", help="Relative score threshold (reports TFBSs below the given threshold; default = 0.8)", metavar="<rel_score_thresh>")
     parser.add_option("-s", default="p_value", action="store", type="string", dest="scores", help="TFBS scores (reports TFBS scores as \"p_value\", \"rel_score\" or \"both\", this last option available only for \"csv\" and \"tsv\" formats; default = p_value)", metavar="<scores>")

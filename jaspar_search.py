@@ -27,7 +27,7 @@ def parse_options():
     parser.add_option("-j", action="store", type="string", dest="matrix_id", help="JASPAR matrix ID (e.g. MA0002.2)", metavar="<jaspar_matrix_id>")
     parser.add_option("-m", action="store", type="string", dest="meme_dir", help="Full path to MEME bin directory (i.e. where all MEME executables are located; e.g. $MEME_PATH/bin)", metavar="<meme_dir>")
     parser.add_option("-o", default="./", action="store", type="string", dest="output_dir", help="Output directory (default = ./)", metavar="<output_dir>")
-    parser.add_option("-p", action="store", type="string", dest="profiles_dir", help="Profiles directory (from jaspar2meme.py)", metavar="<profiles_dir>")
+    parser.add_option("-p", action="store", type="string", dest="profiles_dir", help="Profiles directory (from jaspar2meme.py and jaspar2pfm.py)", metavar="<profiles_dir>")
     parser.add_option("-r", default="./", action="store", type="string", dest="results_dir", help="Results directory (output directory from applying %prog on a previous JASPAR release; default = None)", metavar="<results_dir>")
     parser.add_option("--pv-thresh", default=0.05, action="store", type="float", dest="p_value_thresh", help="P-value threshold (default = 0.05)", metavar="<p_value_thresh>")
     parser.add_option("--rs-thresh", default=0.8, action="store", type="float", dest="rel_score_thresh", help="Relative score threshold (default = 0.8)", metavar="<rel_score_thresh>")
