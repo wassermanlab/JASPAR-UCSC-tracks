@@ -116,6 +116,6 @@ if __name__ == "__main__":
     # If dummy file exists... #
     if os.path.exists(dummy_file):
         # Copy #
-        shutil.copy(results_file, os.path.abspath(options.output_file))
+        shutil.copy(dummy_file, os.path.abspath(options.output_file))
         # Remove dummy file #
         os.remove(dummy_file)
