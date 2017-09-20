@@ -2,6 +2,7 @@
 import os, sys, re
 from Bio import motifs
 import optparse
+import shutil
 
 # Import my functions #
 import functions
@@ -58,6 +59,10 @@ if __name__ == "__main__":
     profiles = {}
     delimiter = "\t"
     if options.format == "csv": delimiter = ","
+    if options.output_file is None: dummy_file = None
+    else: dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.txt" % os.getpid())
+    # Remove dummy file if exist #
+    if os.path.exists(dummy_file): os.remove(dummy_file)
     # Write #
     if options.format != "bed":
         header = delimiter.join(["chr", "start (1-based)", "end"])
@@ -65,7 +70,7 @@ if __name__ == "__main__":
         elif options.scores == "p_value": header += delimiter + "p_value"
         else: header += delimiter + "rel_score * 1000" + delimiter + "-1 * log10(p_value) * 100"
         # Write #
-        functions.write(options.output_file, header + delimiter + "strand")
+        functions.write(dummy_file, header + delimiter + "strand")
     # For each matrix id and for each chr file... #
     for file_name in os.listdir(os.path.abspath(options.input_dir)):
         # Initialize #
@@ -107,5 +112,10 @@ if __name__ == "__main__":
             # If both relative scores and p-values are required... #
             else: score = delimiter.join([line[2], line[3]])
             # Write #
-            functions.write(options.output_file, delimiter.join(map(str, [chromosome, start, end, profiles[matrix_id].name, score, strand])))
-
+            functions.write(dummy_file, delimiter.join(map(str, [chromosome, start, end, profiles[matrix_id].name, score, strand])))
+    # If dummy file exists... #
+    if os.path.exists(dummy_file):
+        # Copy #
+        shutil.copy(results_file, os.path.abspath(options.output_file))
+        # Remove dummy file #
+        os.remove(dummy_file)
