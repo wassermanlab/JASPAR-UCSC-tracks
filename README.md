@@ -11,7 +11,7 @@ The scripts for creating the JASPAR UCSC tracks require the following dependenci
 * [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
 ## Usage
-We generated custom UCSC Genome Browser track data hubs containing genome-wide binding site predictions for TF binding profiles in the JASPAR CORE vertebrates collection. For each profile, the human genome assemblies [hg19](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/) and [hg38](http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/) were scanned in parallel using the [TFBS](http://tfbs.genereg.net) Perl module and [FIMO](http://meme-suite.org/doc/fimo.html), as distributed within the [MEME](http://meme-suite.org/meme-software/4.11.2/meme_4.11.2_2.tar.gz) suite. Please refer to the JASPAR 2018 manuscript for more details.
+We generated custom UCSC Genome Browser track data hubs containing genome-wide binding site predictions for TF profiles in the JASPAR CORE vertebrates collection. For each profile, the human genome assemblies [hg19](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/) and [hg38](http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/) were scanned in parallel using the [TFBS](http://tfbs.genereg.net) Perl module and [FIMO](http://meme-suite.org/doc/fimo.html), as distributed within the [MEME](http://meme-suite.org/meme-software/4.11.2/meme_4.11.2_2.tar.gz) suite. Please refer to the JASPAR 2018 manuscript for more details.
 
 ### Reformat JASPAR profiles
 For scanning the human genome with the BioPerl TFBS module, we converted profiles to [PWMs](https://en.wikipedia.org/wiki/Position_weight_matrix) using the `jaspar2pfm.py` script.
