@@ -18,7 +18,7 @@ def parse_options():
 
     """
 
-    parser = optparse.OptionParser("./%prog -i <input_dir> -p <profiles_dir> [-c <chr> --dummy=<dummy_dir> -f <format> -m <matrix_id> -o <output_file> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh> -s <scores>]")
+    parser = optparse.OptionParser("./%prog -i <input_dir> -p <profiles_dir> [-c <chr> --dummy=<dummy_dir> -f <format> -m <matrix_id> -o <output_file> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh> -s <scores> -z]")
 
     parser.add_option("-c", action="store", type="string", dest="chr", help="Chromosome (reports TFBSs for the given chromosome; i.e. 1-22, X, Y and M; provide multiple chromosomes using commas e.g. \"chr2\"; default = None)", metavar="<chr>")
     parser.add_option("--dummy", default="/tmp/", action="store", type="string", dest="dummy_dir", help="Dummy directory (default = /tmp/)", metavar="<dummy_dir>")
@@ -30,6 +30,7 @@ def parse_options():
     parser.add_option("--pv-thresh", default=0.05, action="store", type="float", dest="p_value_thresh", help="P-value threshold (reports TFBSs over the given threshold; default = 0.05)", metavar="<p_value_thresh>")
     parser.add_option("--rs-thresh", default=0.8, action="store", type="float", dest="rel_score_thresh", help="Relative score threshold (reports TFBSs below the given threshold; default = 0.8)", metavar="<rel_score_thresh>")
     parser.add_option("-s", default="p_value", action="store", type="string", dest="scores", help="TFBS scores (reports TFBS scores as \"p_value\", \"rel_score\" or \"both\", this last option available only for \"csv\" and \"tsv\" formats; default = p_value)", metavar="<scores>")
+    parser.add_option("-z", "--gzip", default=False, action="store_true", dest="compress", help="Compress output file using Gzip (default = False)")
 
     (options, args) = parser.parse_args()
 
@@ -115,7 +116,13 @@ if __name__ == "__main__":
             functions.write(dummy_file, delimiter.join(map(str, [chromosome, start, end, profiles[matrix_id].name, score, strand])))
     # If dummy file exists... #
     if os.path.exists(dummy_file):
-        # Copy #
-        shutil.copy(dummy_file, os.path.abspath(options.output_file))
+        # If compress... #
+        if options.compress:
+            # Compress #
+            functions.compress(dummy_file, "%s.gz" % os.path.abspath(options.output_file))
+        # ... Else... #
+        else:
+            # Copy #
+            shutil.copy(dummy_file, os.path.abspath(options.output_file))
         # Remove dummy file #
         os.remove(dummy_file)

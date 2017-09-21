@@ -157,7 +157,7 @@ if __name__ == "__main__":
             if os.path.exists(dummy_fasta): os.remove(dummy_fasta)
         # If dummy file exists... #
         if os.path.exists(dummy_file):
-            # Gzip #
+            # Compress #
             functions.compress(dummy_file, output_file)
             # Remove dummy file #
             os.remove(dummy_file)
