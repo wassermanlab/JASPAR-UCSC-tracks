@@ -1,7 +1,7 @@
 # JASPAR UCSC tracks
 For the 2018 release of [JASPAR](http://jaspar2018.genereg.net/), we have performed TFBS predictions on the human genome (hg19 and hg38 assemblies) using the [CORE vertebrates TF binding profiles](http://jaspar2018.genereg.net/collection/core/), which are publicly available as UCSC Genome Browser track data hubs:
-* [UCSC tracks for the hg19 assembly](http://www.google.com)
-* [UCSC tracks for the hg38 assembly](http://www.google.com)
+* [UCSC tracks for the hg19 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
+* [UCSC tracks for the hg38 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
 
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
@@ -11,7 +11,7 @@ The scripts for creating the JASPAR UCSC tracks require the following dependenci
 * [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
 ## Usage
-We generated custom UCSC Genome Browser track data hubs containing genome-wide TFBS predictions for TF binding profiles in the JASPAR CORE vertebrates collection. For each profile, the human genome assemblies [hg19](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/) and [hg38](http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/) were scanned in parallel using the [TFBS](http://tfbs.genereg.net) Perl module and [FIMO](http://meme-suite.org/doc/fimo.html), as distributed within the [MEME](http://meme-suite.org/meme-software/4.11.2/meme_4.11.2_2.tar.gz) suite. We acknowledge that computational predictions of TFBSs have limited accuracy (reviewed in [Stormo 2013](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4101922/)). Please refer to the JASPAR 2018 manuscript for more details.
+We generated custom UCSC Genome Browser track data hubs containing genome-wide binding site predictions for TF binding profiles in the JASPAR CORE vertebrates collection. For each profile, the human genome assemblies [hg19](http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/) and [hg38](http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/) were scanned in parallel using the [TFBS](http://tfbs.genereg.net) Perl module and [FIMO](http://meme-suite.org/doc/fimo.html), as distributed within the [MEME](http://meme-suite.org/meme-software/4.11.2/meme_4.11.2_2.tar.gz) suite. Please refer to the JASPAR 2018 manuscript for more details.
 
 ### Reformat JASPAR profiles
 For scanning the human genome with the BioPerl TFBS module, we converted profiles to [PWMs](https://en.wikipedia.org/wiki/Position_weight_matrix) using the `jaspar2pfm.py` script.
@@ -23,7 +23,7 @@ For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.
 `./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
 
 ### Scanning of the human genome
-For each TF binding profile, the human DNA sequence (in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format) was scanned using the `jaspar_search.py` script, and matches with a relative score ≥0.8 and with a *p*-value <0.05 were kept (*i.e.* TFBS predictions that were not consistent between the TFBS Perl module and FIMO were filtered out.)
+For each TF binding profile, the human DNA sequence (in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format) was scanned using the `jaspar_search.py` script, and matches with a relative score ≥0.8 and with a *p*-value <0.05 were kept (*i.e.* TFBS predictions that were not consistent between the TFBS Perl module and FIMO were filtered out).
 
 `./jaspar_search.py -f $GENOME_FASTA -j $JASPAR_MATRIX_ID -m $MEME_DIR -o $SCANS_DIR -p $PROFILES_DIR`
 
@@ -33,6 +33,6 @@ TFBS predictions were converted to [BED format](https://genome.ucsc.edu/FAQ/FAQf
 `./fetch_binding_sites.py -i $SCANS_DIR -p $PROFILES_DIR | sort -k1,1 -k2,2n > $BED_FILE`
 
 ### Create a UCSC Genome Browser bigBed track file
-Finally, BED files were converted to [bigBed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1.5) for visualization in the UCSC Genome Browser using [bedToBigBed](http://hgdownload.cse.ucsc.edu/admin/exe/), as distributed within the UCSC binaries for standalone command-line use. The genome browser translates BED score values into [shades of gray](https://genome.ucsc.edu/FAQ/FAQformat.html#format1).
+Finally, BED files were converted to [bigBed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1.5) for visualization in the UCSC Genome Browser using [bedToBigBed](http://hgdownload.cse.ucsc.edu/admin/exe/), as distributed within the UCSC binaries for standalone command-line use.
 
 `bedToBigBed -type=bed6 -tab -extraIndex=name $BED_FILE $CHROM_SIZES $BIGBED_FILE`
