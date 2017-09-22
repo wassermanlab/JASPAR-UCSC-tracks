@@ -66,7 +66,8 @@ if __name__ == "__main__":
     rel_score_thresh = int(options.rel_score_thresh * 1000) # transform relative score threshold
     p_value_thresh = int(log(options.p_value_thresh) * 1000 / -10) # transform p-value threshold
     # Remove dummy file if exist #
-    if os.path.exists(dummy_file): os.remove(dummy_file)
+    if dummy_file is not None:
+        if os.path.exists(dummy_file): os.remove(dummy_file)
     # Write #
     if options.format != "bed":
         header = delimiter.join(["chr", "start (1-based)", "end"])
@@ -118,18 +119,19 @@ if __name__ == "__main__":
             # Write #
             functions.write(dummy_file, delimiter.join(map(str, [chromosome, start, end, profiles[matrix_id].name, score, strand])))
     # If dummy file exists... #
-    if os.path.exists(dummy_file):
-        # Initialize #
-        output_file = os.path.abspath(options.output_file)
-        # If compress... #
-        if options.compress:
+    if dummy_file is not None:
+        if os.path.exists(dummy_file):
             # Initialize #
-            if not output_file.endswith(".gz"): output_file += ".gz"
-            # Compress #
-            functions.compress(dummy_file, output_file)
-        # ... Else... #
-        else:
-            # Copy #
-            shutil.copy(dummy_file, output_file)
-        # Remove dummy file #
-        os.remove(dummy_file)
+            output_file = os.path.abspath(options.output_file)
+            # If compress... #
+            if options.compress:
+                # Initialize #
+                if not output_file.endswith(".gz"): output_file += ".gz"
+                # Compress #
+                functions.compress(dummy_file, output_file)
+            # ... Else... #
+            else:
+                # Copy #
+                shutil.copy(dummy_file, output_file)
+            # Remove dummy file #
+            os.remove(dummy_file)
