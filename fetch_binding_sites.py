@@ -66,6 +66,8 @@ if __name__ == "__main__":
         if options.format == "csv": delimiter = ","
         if options.output_file is None: dummy_file = None
         else: dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.txt" % os.getpid())
+        rel_score_thresh = int(options.rel_score_thresh * 1000) # transform relative score threshold
+        p_value_thresh = int(log(options.p_value_thresh) * 1000 / -10) # transform p-value threshold
         # Remove dummy file if exist #
         if os.path.exists(dummy_file): os.remove(dummy_file)
         # Write #
@@ -103,10 +105,10 @@ if __name__ == "__main__":
                 if options.format == "bed": start -= 1 # convert to BED format (0-based)
                 end = position + profiles[matrix_id].length - 1
                 strand = line[1]
-                rel_score = float(line[2]) / 1000  # transform back to the original relative score (between 0 and 1)
-                p_value =  10 ** (-10 * (float(line[3]) / 1000)) # transform back to the original p-value (between 0 and 1)
+                rel_score = int(line[2])
+                p_value =  int(line[3])
                 # Skip matches that do not pass any of the score thresholds #
-                if rel_score < options.rel_score_thresh or p_value > options.p_value_thresh: continue
+                if rel_score < rel_score_thresh or p_value > p_value_thresh: continue
                 # For BED files, cap scores at 1000 (UCSC Genome Browser does not allow scores >1000) #
                 if options.scores == "rel_score":
                     if options.format == "bed": score = min([int(line[2]), 1000])
