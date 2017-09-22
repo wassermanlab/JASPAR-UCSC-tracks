@@ -57,79 +57,79 @@ if __name__ == "__main__":
     # Arguments & Options #
     options = parse_options()
 
-    # Skip if output file already exists #
-    output_file = os.path.abspath(options.output_file)
-    if options.compress and not output_file.endswith(".gz"): output_file += ".gz"
-    if not os.path.exists(output_file):
-        # Initialize #
-        profiles = {}
-        delimiter = "\t"
-        if options.format == "csv": delimiter = ","
-        if options.output_file is None: dummy_file = None
-        else: dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.txt" % os.getpid())
-        rel_score_thresh = int(options.rel_score_thresh * 1000) # transform relative score threshold
-        p_value_thresh = int(log(options.p_value_thresh) * 1000 / -10) # transform p-value threshold
-        # Remove dummy file if exist #
-        if os.path.exists(dummy_file): os.remove(dummy_file)
+    # Initialize #
+    profiles = {}
+    delimiter = "\t"
+    if options.format == "csv": delimiter = ","
+    if options.output_file is None: dummy_file = None
+    else: dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.txt" % os.getpid())
+    rel_score_thresh = int(options.rel_score_thresh * 1000) # transform relative score threshold
+    p_value_thresh = int(log(options.p_value_thresh) * 1000 / -10) # transform p-value threshold
+    # Remove dummy file if exist #
+    if os.path.exists(dummy_file): os.remove(dummy_file)
+    # Write #
+    if options.format != "bed":
+        header = delimiter.join(["chr", "start (1-based)", "end"])
+        if options.scores == "rel_score": header += delimiter + "rel_score * 1000"
+        elif options.scores == "p_value": header += delimiter + "p_value"
+        else: header += delimiter + "rel_score * 1000" + delimiter + "-1 * log10(p_value) * 100"
         # Write #
-        if options.format != "bed":
-            header = delimiter.join(["chr", "start (1-based)", "end"])
-            if options.scores == "rel_score": header += delimiter + "rel_score * 1000"
-            elif options.scores == "p_value": header += delimiter + "p_value"
-            else: header += delimiter + "rel_score * 1000" + delimiter + "-1 * log10(p_value) * 100"
-            # Write #
-            functions.write(dummy_file, header + delimiter + "strand")
-        # For each matrix id and for each chr file... #
-        for file_name in os.listdir(os.path.abspath(options.input_dir)):
+        functions.write(dummy_file, header + delimiter + "strand")
+    # For each matrix id and for each chr file... #
+    for file_name in os.listdir(os.path.abspath(options.input_dir)):
+        # Initialize #
+        m = re.search("^(MA\d+\.\d)\.(chr[0-9XYM]{1,2})\.tab\.gz$", file_name)
+        if not m: continue
+        matrix_id = m.group(1)
+        chromosome = m.group(2)
+        # Skip file if wrong matrix id #
+        if options.matrix_id is not None:
+            if matrix_id not in options.matrix_id.split(","): continue
+        # Skip file if wrong chromosome #
+        if options.chr is not None:
+            if chromosome not in options.chr.split(","): continue
+        # If no profile for matrix id... #
+        if matrix_id not in profiles:
+            # Load profile #
+            with open(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % matrix_id)) as f:
+                # Add profile to profiles #
+                profiles.setdefault(matrix_id, motifs.read(f, "jaspar"))
+        # For each line...
+        for line in functions.parse_tsv_file(os.path.join(os.path.abspath(options.input_dir), file_name), gz=True):
             # Initialize #
-            m = re.search("^(MA\d+\.\d)\.(chr[0-9XYM]{1,2})\.tab\.gz$", file_name)
-            if not m: continue
-            matrix_id = m.group(1)
-            chromosome = m.group(2)
-            # Skip file if wrong matrix id #
-            if options.matrix_id is not None:
-                if matrix_id not in options.matrix_id.split(","): continue
-            # Skip file if wrong chromosome #
-            if options.chr is not None:
-                if chromosome not in options.chr.split(","): continue
-            # If no profile for matrix id... #
-            if matrix_id not in profiles:
-                # Load profile #
-                with open(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % matrix_id)) as f:
-                    # Add profile to profiles #
-                    profiles.setdefault(matrix_id, motifs.read(f, "jaspar"))
-            # For each line...
-            for line in functions.parse_tsv_file(os.path.join(os.path.abspath(options.input_dir), file_name), gz=True):
-                # Initialize #
-                position = int(line[0])
-                start = position
-                if options.format == "bed": start -= 1 # convert to BED format (0-based)
-                end = position + profiles[matrix_id].length - 1
-                strand = line[1]
-                rel_score = int(line[2])
-                p_value =  int(line[3])
-                # Skip matches that do not pass any of the score thresholds #
-                if rel_score < rel_score_thresh or p_value < p_value_thresh: continue
-                # For BED files, cap scores at 1000 (UCSC Genome Browser does not allow scores >1000) #
-                if options.scores == "rel_score":
-                    if options.format == "bed": score = min([int(line[2]), 1000])
-                    else: score = line[2]
-                elif options.scores == "p_value":
-                    if options.format == "bed": score = min([int(line[3]), 1000])
-                    else: score = line[3]
-                # If both relative scores and p-values are required... #
-                else: score = delimiter.join([line[2], line[3]])
-                # Write #
-                functions.write(dummy_file, delimiter.join(map(str, [chromosome, start, end, profiles[matrix_id].name, score, strand])))
-        # If dummy file exists... #
-        if os.path.exists(dummy_file):
-            # If compress... #
-            if options.compress:
-                # Compress #
-                functions.compress(dummy_file, output_file)
-            # ... Else... #
-            else:
-                # Copy #
-                shutil.copy(dummy_file, output_file)
-            # Remove dummy file #
-            os.remove(dummy_file)
+            position = int(line[0])
+            start = position
+            if options.format == "bed": start -= 1 # convert to BED format (0-based)
+            end = position + profiles[matrix_id].length - 1
+            strand = line[1]
+            rel_score = int(line[2])
+            p_value =  int(line[3])
+            # Skip matches that do not pass any of the score thresholds #
+            if rel_score < rel_score_thresh or p_value < p_value_thresh: continue
+            # For BED files, cap scores at 1000 (UCSC Genome Browser does not allow scores >1000) #
+            if options.scores == "rel_score":
+                if options.format == "bed": score = min([int(line[2]), 1000])
+                else: score = line[2]
+            elif options.scores == "p_value":
+                if options.format == "bed": score = min([int(line[3]), 1000])
+                else: score = line[3]
+            # If both relative scores and p-values are required... #
+            else: score = delimiter.join([line[2], line[3]])
+            # Write #
+            functions.write(dummy_file, delimiter.join(map(str, [chromosome, start, end, profiles[matrix_id].name, score, strand])))
+    # If dummy file exists... #
+    if os.path.exists(dummy_file):
+        # Initialize #
+        output_file = os.path.abspath(options.output_file)
+        # If compress... #
+        if options.compress:
+            # Initialize #
+            if not output_file.endswith(".gz"): output_file += ".gz"
+            # Compress #
+            functions.compress(dummy_file, output_file)
+        # ... Else... #
+        else:
+            # Copy #
+            shutil.copy(dummy_file, output_file)
+        # Remove dummy file #
+        os.remove(dummy_file)
