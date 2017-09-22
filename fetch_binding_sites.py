@@ -109,7 +109,7 @@ if __name__ == "__main__":
                 rel_score = int(line[2])
                 p_value =  int(line[3])
                 # Skip matches that do not pass any of the score thresholds #
-                if rel_score < rel_score_thresh or p_value > p_value_thresh: continue
+                if rel_score < rel_score_thresh or p_value < p_value_thresh: continue
                 # For BED files, cap scores at 1000 (UCSC Genome Browser does not allow scores >1000) #
                 if options.scores == "rel_score":
                     if options.format == "bed": score = min([int(line[2]), 1000])
