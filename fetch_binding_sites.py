@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 import os, sys, re
 from Bio import motifs
+from numpy import log10 as log
 import optparse
 import shutil
 
