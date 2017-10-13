@@ -117,7 +117,7 @@ if __name__ == "__main__":
         # Remove dummy file if exist #
         if os.path.exists(dummy_file): os.remove(dummy_file)
         # Create an empty dummy file #
-        os.system("touch %s" % dummy_file)
+        open(dummy_file, 'a').close()
         # Skip if output file already exists #
         if os.path.exists(output_file): continue
         # If output file exists in a previous JASPAR release... #
