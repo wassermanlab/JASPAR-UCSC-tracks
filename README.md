@@ -24,7 +24,7 @@ For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.
 
 `./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
 
-Individual PFMS in JASPAR/MEME format can also be retrieved from the JASPAR downloads page [here](http://jaspar.genereg.net/downloads/).
+Individual PFMs in JASPAR/MEME format can also be retrieved from the JASPAR downloads page [here](http://jaspar.genereg.net/downloads/).
 
 ### Scanning of the human genome
 For each TF binding profile, the human DNA sequence (in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format) was scanned using the `jaspar_search.py` script, and matches with a relative score ≥0.8 and with a *p*-value <0.05 were kept (*i.e.* TFBS predictions that were not consistent between the TFBS Perl module and FIMO were filtered out).
