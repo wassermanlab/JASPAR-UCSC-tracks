@@ -103,7 +103,11 @@ if __name__ == "__main__":
 
     # Initialize #
     dummy_fasta = os.path.join(os.path.abspath(options.dummy_dir), "%s.fa" % os.getpid())
-    pfm_file = os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % options.matrix_id)
+    if os.path.exists(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % options.matrix_id)):
+        pfm_file = os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % options.matrix_id)
+    elif os.path.exists(os.path.join(os.path.abspath(options.profiles_dir), "%s.jaspar" % options.matrix_id)):
+        pfm_file = os.path.join(os.path.abspath(options.profiles_dir), "%s.jaspar" % options.matrix_id)
+    else: raise ValueError("PFM in JASPAR format does not exist!")
 
     # Load profile #
     with open(pfm_file) as f:

@@ -3,6 +3,8 @@ For the 2018 release of [JASPAR](http://jaspar2018.genereg.net/), we have perfor
 * [UCSC tracks for the hg19 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
 * [UCSC tracks for the hg38 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
 
+For other popular organisms, including *Arabidopsis thaliana* ([araTha1](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001735.3/)), *Drosophila melanogaster* ([dm6](http://genome.ucsc.edu/cgi-bin/hgGateway?db=dm6)), mouse ([mm10](http://genome.ucsc.edu/cgi-bin/hgGateway?db=mm10)), worm ([ce10](http://genome.ucsc.edu/cgi-bin/hgGateway?db=ce10)), yeast ([sacCer3](http://genome.ucsc.edu/cgi-bin/hgGateway?db=sacCer3)), and zebrafish ([danRer10](http://genome.ucsc.edu/cgi-bin/hgGateway?db=danRer10)), genome tracks are currently in preparation. We will make these tracks available as soon as they are computed. Please do not hesitate to contact us for requesting genome tracks for other popular organisms. 
+
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
 * [MEME](http://meme-suite.org/doc/overview.html) suite (≥4.12.0)
@@ -21,6 +23,8 @@ For scanning the human genome with the BioPerl TFBS module, we converted profile
 For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.org/doc/meme-format.html) using the `jaspar2meme.py` script.
 
 `./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
+
+Individual PFMS in JASPAR/MEME format can also be retrieved from the JASPAR downloads page [here](http://jaspar.genereg.net/downloads/).
 
 ### Scanning of the human genome
 For each TF binding profile, the human DNA sequence (in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format) was scanned using the `jaspar_search.py` script, and matches with a relative score ≥0.8 and with a *p*-value <0.05 were kept (*i.e.* TFBS predictions that were not consistent between the TFBS Perl module and FIMO were filtered out).

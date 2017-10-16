@@ -79,11 +79,21 @@ unless ($matrix_file) {
 }
 
 # Load PFM
-my $pfm = TFBS::Matrix::PFM->new('-matrixfile', $matrix_file);
+my @counts = ();
+open(my $fh, "<", $matrix_file) or die "Can't open $matrix_file: $!";
+while (my $line = <$fh>) {
+    chomp $line;
+    unless ($line =~ /^>/) {
+        my @matches = $line =~ m/([\d\.]+)/g;
+        push @counts, join "\t", @matches;
+    } else {
+        
+    }
+}
+my $pfm = TFBS::Matrix::PFM->new("-matrixstring" => join("\n", @counts)) or die "Error creating the PFM\n";
 
 # Transform to PWM
-my $pwm = $pfm->to_PWM;
-die "Error converting PFM to PWM\n" if !$pwm;
+my $pwm = $pfm->to_PWM or die "Error converting the PFM to a PWM\n";
 
 # Amount to overlap successive chromsome segments. Overlap by 1 nt less than
 # the width of the motif to avoid duplicate hits in the overlapping regions.
