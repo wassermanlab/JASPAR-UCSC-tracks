@@ -152,8 +152,6 @@ if __name__ == "__main__":
             for chromosome, start, end, strand, relative_score in jaspar_search(pfm_file, dummy_fasta, options.rel_score_thresh):
                 # Add to relative scores #
                 relative_scores.setdefault((start + chunk_start, strand), int(relative_score * 1000))
-            print(relative_scores)
-            exit(0)
             # For each fimo match... #
             for chromosome, start, end, strand, p_value in fimo_search(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, options.p_value_thresh):
                 # If match in relative scores... #
