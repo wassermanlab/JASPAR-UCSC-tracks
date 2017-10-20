@@ -84,12 +84,11 @@ open(my $fh, "<", $matrix_file) or die "Can't open $matrix_file: $!";
 while (my $line = <$fh>) {
     chomp $line;
     unless ($line =~ /^>/) {
-        my @matches = $line =~ m/([\d\.]+)/g;
+        my @matches = $line =~ m/([^ACGT][^\[][^\]]\S+)/g; # this regexp fixes the need for 'export LANGUAGE=en_US.UTF-8'
         push @counts, join "\t", @matches;
-    } else {
-        
     }
 }
+print(join("\n", @counts), "\n"); exit;
 my $pfm = TFBS::Matrix::PFM->new("-matrixstring" => join("\n", @counts)) or die "Error creating the PFM\n";
 
 # Transform to PWM

@@ -92,7 +92,7 @@ if __name__ == "__main__":
         meme_file = os.path.join(os.path.abspath(options.output_dir), "%s.meme" % profile)
         if not os.path.exists(meme_file):
             # Write #
-            functions.write(meme_file, "\n".join(profiles[profile]))
+            functions.write(meme_file, "\n".join(profiles[profile]).replace("\t", " ")) # this prevents the TF name to be outputed as an extra FIMO field between the matrix ID and the chr in jaspar_search.py
 #    # ... Else... #
 #    else:
 #        # For each profile... #
