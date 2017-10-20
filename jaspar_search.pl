@@ -88,7 +88,6 @@ while (my $line = <$fh>) {
         push @counts, join "\t", @matches;
     }
 }
-print(join("\n", @counts), "\n"); exit;
 my $pfm = TFBS::Matrix::PFM->new("-matrixstring" => join("\n", @counts)) or die "Error creating the PFM\n";
 
 # Transform to PWM
