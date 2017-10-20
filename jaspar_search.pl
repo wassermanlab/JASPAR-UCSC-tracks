@@ -84,7 +84,7 @@ open(my $fh, "<", $matrix_file) or die "Can't open $matrix_file: $!";
 while (my $line = <$fh>) {
     chomp $line;
     unless ($line =~ /^>/) {
-        my @matches = $line =~ m/([^ACGT][^\[][^\]]\S+)/g; # this regexp fixes the need for export LANGUAGE=en_US.UTF-8
+        my @matches = $line =~ m/([^ACGT][^\[][^\]]\S+)/g; # this fixes the need for export LANGUAGE=en_US.UTF-8
         push @counts, join "\t", @matches;
     }
 }
