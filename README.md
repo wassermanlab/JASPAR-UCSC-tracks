@@ -7,7 +7,7 @@ For other popular organisms, including *Arabidopsis thaliana* ([araTha1](https:/
 
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
-* [MEME](http://meme-suite.org/doc/overview.html) suite (≥4.12.0)
+* [MEME](http://meme-suite.org/doc/overview.html) suite (=4.11.2)
 * Perl (>5.14) with the [BioPerl](http://bioperl.org) and [TFBS](http://tfbs.genereg.net) packages
 * Python (>2.7) with the *Biopython* (≥1.65) and *numpy* (≥1.8.2) libraries
 * [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
@@ -20,7 +20,7 @@ For scanning the human genome with the BioPerl TFBS module, we converted profile
 
 `./jaspar2pfm.py -b ./files/JASPAR2018_CORE_vertebrates.txt -o $PROFILES_DIR`
 
-For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.org/doc/meme-format.html) using the `jaspar2meme.py` script.
+For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.org/doc/meme-format.html) using the `jaspar2meme.py` script (warning: `LC_ALL`, `LANG` and `LANGUAGE` must be set to en_US.UTF-8).
 
 `./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
 
