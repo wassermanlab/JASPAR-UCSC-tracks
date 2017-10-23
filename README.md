@@ -20,7 +20,7 @@ For scanning the human genome with the BioPerl TFBS module, we converted profile
 
 `./jaspar2pfm.py -b ./files/JASPAR2018_CORE_vertebrates.txt -o $PROFILES_DIR`
 
-For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.org/doc/meme-format.html) using the `jaspar2meme.py` script (warning: `LC_ALL`, `LANG` and `LANGUAGE` must be set to en_US.UTF-8).
+For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.org/doc/meme-format.html) using the `jaspar2meme.py` script (warning: `LC_ALL`, `LANG` and `LANGUAGE` must be set to `en_US.UTF-8`).
 
 `./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
 
