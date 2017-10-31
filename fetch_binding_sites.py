@@ -21,7 +21,7 @@ def parse_options():
 
     parser = optparse.OptionParser("./%prog -i <input_dir> -p <profiles_dir> [-c <chr> --dummy=<dummy_dir> -f <format> -m <matrix_id> -o <output_file> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh> -s <scores> -z]")
 
-    parser.add_option("-c", action="store", type="string", dest="chr", help="Chromosome (reports TFBSs for the given chromosome; i.e. 1-22, X, Y and M; provide multiple chromosomes using commas e.g. \"chr2\"; default = None)", metavar="<chr>")
+    parser.add_option("-c", action="store", type="string", dest="chr", help="Chromosome (reports TFBSs for the given chromosome; e.g 1-22, X, Y, M...; provide multiple chromosomes using commas e.g. \"chr2\"; default = None)", metavar="<chr>")
     parser.add_option("--dummy", default="/tmp/", action="store", type="string", dest="dummy_dir", help="Dummy directory (default = /tmp/)", metavar="<dummy_dir>")
     parser.add_option("-f", default="bed", action="store", type="string", dest="format", help="Format for output results (i.e. \"bed\", \"csv\" or \"tsv\"; default = bed)", metavar="<format>")
     parser.add_option("-i", action="store", type="string", dest="input_dir", help="Input directory with TFBSs matches (i.e. output directory from jaspar_search.py)", metavar="<input_dir>")
@@ -38,10 +38,10 @@ def parse_options():
     if options.input_dir is None or options.profiles_dir is None:
         parser.error("missing arguments: type option \"-h\" for help")
 
-    if options.chr is not None:
-        for chromosome in options.chr.split(","):
-            if not re.search("^chr[0-9XYM]{1,2}$", chromosome):
-                parser.error("invalid chromosome: %s\n\tvalid chromosomes include 1-22, X, Y and M: e.g. \"chr2\"" % chromosome)
+#    if options.chr is not None:
+#        for chromosome in options.chr.split(","):
+#            if not re.search("^chr[0-9XYM]{1,2}$", chromosome):
+#                parser.error("invalid chromosome: %s\n\tvalid chromosomes include 1-22, X, Y and M: e.g. \"chr2\"" % chromosome)
 
     if options.scores != "p_value" and options.scores != "rel_score" and options.scores != "both":
         parser.error("invalid type of TBFS score:%s\n\tTFBS scores can only be reported as \"p_value\", \"rel_score\" or \"both\", this last option available only for \"csv\" and \"tsv\" formats" % options.scores)
