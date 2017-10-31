@@ -84,7 +84,7 @@ open(my $fh, "<", $matrix_file) or die "Can't open $matrix_file: $!";
 while (my $line = <$fh>) {
     chomp $line;
     unless ($line =~ /^>/) {
-        my @matches = $line =~ m/([^ACGT][^\[][^\]]\S+)/g;
+        my @matches = $line =~ m/([+-]?[0-9]*[.]?[0-9]+)/g; # this regexp captures any JASPAR PWM type
         push @counts, join "\t", @matches;
     }
 }
