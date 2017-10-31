@@ -91,8 +91,14 @@ if __name__ == "__main__":
             if chromosome not in options.chr.split(","): continue
         # If no profile for matrix id... #
         if matrix_id not in profiles:
+            # Initialize #
+            if os.path.exists(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % matrix_id)):
+                pfm_file = os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % matrix_id)
+            elif os.path.exists(os.path.join(os.path.abspath(options.profiles_dir), "%s.jaspar" % matrix_id)):
+                pfm_file = os.path.join(os.path.abspath(options.profiles_dir), "%s.jaspar" % matrix_id)
+            else: raise ValueError("PFM in JASPAR format does not exist!")
             # Load profile #
-            with open(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % matrix_id)) as f:
+            with open(pfm_file) as f:
                 # Add profile to profiles #
                 profiles.setdefault(matrix_id, motifs.read(f, "jaspar"))
         # For each line...
