@@ -38,10 +38,10 @@ def parse_options():
     if options.input_dir is None or options.profiles_dir is None:
         parser.error("missing arguments: type option \"-h\" for help")
 
-#    if options.chr is not None:
-#        for chromosome in options.chr.split(","):
-#            if not re.search("^chr[0-9XYM]{1,2}$", chromosome):
-#                parser.error("invalid chromosome: %s\n\tvalid chromosomes include 1-22, X, Y and M: e.g. \"chr2\"" % chromosome)
+    if options.chr is not None:
+        for chromosome in options.chr.split(","):
+            if not re.search("^chr\S+$", chromosome):
+                parser.error("invalid chromosome: %s\n\tvalid chromosomes include, for example 1-22, X, Y or M: e.g. \"chr2\"" % chromosome)
 
     if options.scores != "p_value" and options.scores != "rel_score" and options.scores != "both":
         parser.error("invalid type of TBFS score:%s\n\tTFBS scores can only be reported as \"p_value\", \"rel_score\" or \"both\", this last option available only for \"csv\" and \"tsv\" formats" % options.scores)
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     # For each matrix id and for each chr file... #
     for file_name in os.listdir(os.path.abspath(options.input_dir)):
         # Initialize #
-        m = re.search("^(MA\d+\.\d)\.(chr[0-9XYM]{1,2})\.tab\.gz$", file_name)
+        m = re.search("^(MA\d+\.\d)\.(chr\S+)\.tab\.gz$", file_name)
         if not m: continue
         matrix_id = m.group(1)
         chromosome = m.group(2)
