@@ -7,9 +7,9 @@ For other popular organisms, including *Arabidopsis thaliana* ([araTha1](https:/
 
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
-* [MEME](http://meme-suite.org/doc/overview.html) suite (=4.11.2)
-* Perl (>5.14) with the [BioPerl](http://bioperl.org) and [TFBS](http://tfbs.genereg.net) packages
-* Python (>2.7) with the *Biopython* (≥1.65) and *numpy* (≥1.8.2) libraries
+* [`MEME`](http://meme-suite.org/doc/overview.html) suite (=4.11.2)
+* `Perl` (>5.14) with the [`BioPerl`](http://bioperl.org) and [`TFBS`](http://tfbs.genereg.net) packages
+* `Python` (>2.7) with the [`Biopython`](http://biopython.org) (≥1.65) and [`numpy`](http://www.numpy.org) (≥1.8.2) libraries
 * [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
 ## Usage
