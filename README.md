@@ -1,5 +1,5 @@
 # JASPAR UCSC tracks
-For the 2018 release of [JASPAR](http://jaspar.genereg.net/), we have performed TFBS predictions on the human genome ([hg19](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/) and [hg38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26/) assemblies) using the [CORE vertebrates profiles](http://jaspar2018.genereg.net/collection/core/), which are publicly available as a UCSC Genome Browser track data hub:
+For the [2018 release](https://doi.org/10.1093/nar/gkx1126) of [JASPAR](http://jaspar.genereg.net/), we have performed TFBS predictions on the human genome ([hg19](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/) and [hg38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26/) assemblies) using the [CORE vertebrates profiles](http://jaspar2018.genereg.net/collection/core/), which are publicly available as a UCSC Genome Browser track data hub:
 * [UCSC tracks for the hg19 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
 * [UCSC tracks for the hg38 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
 
