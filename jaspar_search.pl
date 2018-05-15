@@ -8,20 +8,15 @@ jaspar_search.pl
 
   jaspar_search.pl
             -f fasta_file
-            (-id matrix_id | -m matrix_file | -n matrix_name)
-            [-db jaspar_db]
+            -m matrix_file
             [-th threshold]
             [-o out_file]
 
 =head1 ARGUMENTS
  
   -f fasta_file     = FASTA file containing the sequence to be scanned
-  -id matrix_id     = JASPAR ID of TFBS profile with which to search the
+  -m matrix_file    = JASPAR TFBS profile with which to search the
                       sequence(s)
-  -m matrix_file    = JASPAR TFBS profile with which to searc the sequence(s)
-  -n matrix_name    = Name of the JASPAR TFBS profile with which to search
-                      the sequence(s)
-  -db               = JASPAR database name. DEFAULT = JASPAR_2016
   -th threshold     = Minimum score of putative TFBS hit to report.
                       Specify as an absolute score, i.e. 14.1 or as
                       a relative score, i.e. 80%.
@@ -44,7 +39,7 @@ are written to the output file if provided or to standard output otherwise.
   
   E-mail: dave@cmmt.ubc.ca
   
-  Edited by Oriol Fornes @ Wasserman Lab on Sep 19, 2017
+  Edited by Oriol Fornes @ Wasserman Lab on May 15, 2018
 
 =cut
 
