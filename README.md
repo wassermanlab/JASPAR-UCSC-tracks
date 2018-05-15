@@ -1,9 +1,9 @@
 # JASPAR UCSC tracks
-For the [2018 release](https://doi.org/10.1093/nar/gkx1126) of [JASPAR](http://jaspar.genereg.net/), we have performed TFBS predictions on the human genome ([hg19](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/) and [hg38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26/) assemblies) using the [CORE vertebrates profiles](http://jaspar2018.genereg.net/collection/core/), which are publicly available as a UCSC Genome Browser track data hub:
+For the [2018 release](https://doi.org/10.1093/nar/gkx1126) of [JASPAR](http://jaspar.genereg.net/), we performed TFBS predictions on the human genome ([hg19](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.13/) and [hg38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.26/) assemblies) using the [CORE vertebrates profiles](http://jaspar2018.genereg.net/collection/core/), which are publicly available as a UCSC Genome Browser track data hub:
 * [UCSC tracks for the hg19 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
 * [UCSC tracks for the hg38 assembly](http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&hubUrl=http://expdata.cmmt.ubc.ca/JASPAR/UCSC_tracks/hub.txt)
 
-For other popular organisms, including *Arabidopsis thaliana* ([araTha1](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001735.3/)), *Drosophila melanogaster* ([dm6](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001215.4/)), mouse ([mm10](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001635.20/)), worm ([ce10](https://www.ncbi.nlm.nih.gov/assembly/GCF_000002985.5/)), yeast ([sacCer3](https://www.ncbi.nlm.nih.gov/assembly/GCF_000146045.2/)), and zebrafish ([danRer10](https://www.ncbi.nlm.nih.gov/assembly/GCF_000002035.5/)), genome tracks are currently in preparation. We will make these tracks available as soon as they are computed. Please do not hesitate to contact us for requesting genome tracks for your popular organisms of interest. 
+Genome tracks are currently in preparation for other popular organisms, including *Arabidopsis thaliana* ([araTha1](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001735.3/)), *Drosophila melanogaster* ([dm6](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001215.4/)), mouse ([mm10](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001635.20/)), worm ([ce10](https://www.ncbi.nlm.nih.gov/assembly/GCF_000002985.5/)), yeast ([sacCer3](https://www.ncbi.nlm.nih.gov/assembly/GCF_000146045.2/)), and zebrafish ([danRer10](https://www.ncbi.nlm.nih.gov/assembly/GCF_000002035.5/)). We will make these tracks available as soon as they are computed. Please do not hesitate to contact us to request a genome track. 
 
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
@@ -20,7 +20,7 @@ For scanning the human genome with the BioPerl TFBS module, we converted profile
 
 `./jaspar2pfm.py -b ./files/JASPAR2018_CORE_vertebrates.txt -o $PROFILES_DIR`
 
-For the FIMO scan, profiles were reformatted to [MEME motifs](http://meme-suite.org/doc/meme-format.html) using the `jaspar2meme.py` script (*WARNING*: `LC_ALL`, `LANG` and `LANGUAGE` must be set to `en_US.UTF-8`).
+When scanning using FIMO, profiles were reformatted to [MEME motifs](http://meme-suite.org/doc/meme-format.html) using the `jaspar2meme.py` script (*WARNING*: `LC_ALL`, `LANG` and `LANGUAGE` must be set to `en_US.UTF-8`).
 
 `./jaspar2meme.py -b ./files/JASPAR2018_CORE_vertebrates.txt -m $MEME_DIR -o $PROFILES_DIR`
 
@@ -32,11 +32,11 @@ For each TF binding profile, the human DNA sequence (in [FASTA](https://en.wikip
 `./jaspar_search.py -f $GENOME_FASTA -j $JASPAR_MATRIX_ID -m $MEME_DIR -o $SCANS_DIR -p $PROFILES_DIR`
 
 ### Create a sorted BED file
-TFBS predictions were converted to [BED format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1). As scores (column 5), we used FIMO *p*-values (scaled between 0-1000, where 0 corresponds to *p*-value = 1 and 1000 to *p*-value ≤ 10<sup>-10</sup>) to allow for comparison of prediction confidence between different profiles.
+TFBS predictions were converted to [BED format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1). For scores (column 5), we used FIMO *p*-values (scaled between 0-1000, where 0 corresponds to *p*-value = 1 and 1000 to *p*-value ≤ 10<sup>-10</sup>) to allow for comparison of prediction confidence between different profiles.
 
 `./fetch_binding_sites.py -i $SCANS_DIR -p $PROFILES_DIR | sort -k1,1 -k2,2n > $BED_FILE`
 
 ### Create a UCSC Genome Browser bigBed track file
-Finally, BED files were converted to [bigBed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1.5) for visualization in the UCSC Genome Browser using [bedToBigBed](http://hgdownload.cse.ucsc.edu/admin/exe/), as distributed within the UCSC binaries for standalone command-line use.
+Finally, BED files were converted to [bigBed format](https://genome.ucsc.edu/FAQ/FAQformat.html#format1.5) using the UCSC Genome Browser using [bedToBigBed](http://hgdownload.cse.ucsc.edu/admin/exe/), as distributed within the UCSC binaries for standalone command-line use.
 
 `bedToBigBed -type=bed6 -tab -extraIndex=name $BED_FILE $CHROM_SIZES $BIGBED_FILE`
