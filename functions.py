@@ -53,7 +53,7 @@ def parse_file(file_name, gz=False):
     else:
         raise ValueError("File %s does not exist!" % file_name)
 
-def parse_fasta_file(file_name, gz=False, clean=True):
+def parse_fasta_file(file_name, gz=False, clean=True, uracils_to_thymines=True):
     """
     This function parses any FASTA file and yields sequences one by one
     in the form header, sequence.
@@ -83,9 +83,11 @@ def parse_fasta_file(file_name, gz=False, clean=True):
         else:
             sequence += line.upper()
     if clean:
-        sequence = re.sub("\W|\d", "X", sequence)
-
-    yield header, sequence        
+        # Convert non-nucleotides to Ns #
+        sequence = re.sub("[^ACGTU]", "N", sequence)
+    if uracils_to_thymines:
+        # Convert Us to Ts #
+        sequence = re.sub("U", "T", sequence)
 
 def parse_tsv_file(file_name, gz=False):
     """
