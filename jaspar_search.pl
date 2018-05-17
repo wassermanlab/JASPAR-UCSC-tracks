@@ -36,10 +36,12 @@ are written to the output file if provided or to standard output otherwise.
   David Arenillas
   Wasserman Lab
   University of British Columbia
-  
   E-mail: dave@cmmt.ubc.ca
   
-  Edited by Oriol Fornes @ Wasserman Lab on May 15, 2018
+  Last edit by Oriol Fornes on May 15, 2018
+  Wasserman Lab
+  University of British Columbia
+  E-mail: oriol@cmmt.ubc.ca
 
 =cut
 
