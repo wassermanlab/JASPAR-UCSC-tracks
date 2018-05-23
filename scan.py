@@ -24,11 +24,11 @@ def parse_options():
     parser.add_option("-f", action="store", type="string", dest="fasta_file", help="FASTA file (e.g. chr1.fa)", metavar="<fasta_file>")
     parser.add_option("-m", action="store", type="string", dest="matrix_file", help="JASPAR profile (e.g. MA0002.2.pfm)", metavar="<matrix_file>")
     parser.add_option("-o", default="./", action="store", type="string", dest="output_file", help="Output file (default = stdout)", metavar="<output_file>")
-    parser.add_option("-t", default="80%", action="store", type="string", dest="threshold", help="Min. score for TFBS matches; specify as absolute, i.e. 14.1, or relative score, i.e. 80%; default = 80", metavar="<threshold>")
+    parser.add_option("-t", default="80%", action="store", type="string", dest="threshold", help="Min. score for TFBS matches; specify as absolute, e.g. 14.1, or relative score, e.g. 80%; default = 80%", metavar="<threshold>")
 
     (options, args) = parser.parse_args()
 
-    if options.fasta_file is None or options.matrix_id is None or options.meme_dir is None or options.profiles_dir is None:
+    if options.fasta_file is None or options.matrix_file is None:
         parser.error("missing arguments: type option \"-h\" for help")
 
     return options
