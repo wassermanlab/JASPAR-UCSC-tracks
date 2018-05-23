@@ -5,6 +5,7 @@ from numpy import log10 as log
 import optparse
 import shutil
 import subprocess
+from tqdm import tqdm
 
 # Import my functions #
 import functions
@@ -145,7 +146,7 @@ if __name__ == "__main__":
         # If last chunk is too small, merge it to the previous #
         if len(chunks[-1]) <= n: last_chunk = chunks.pop(-1); chunks[-1] += last_chunk
         # For each chunk... #
-        for i in range(len(chunks)):
+        for i in tqdm(range(len(chunks)), desc="Scan %s" % header):
             # Initialize #
             relative_scores = {}
             chunk_start = i * (m - n)
