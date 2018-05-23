@@ -61,9 +61,11 @@ if __name__ == "__main__":
         if len(freqs) != 0: functions.write(dummy_file, "\t".join(freqs))
     
     # Initialize MOODS #
-    bg = MOODS.tools.flat_bg(4)
+    bg = [0.25,0.25,0.25,0.25]
     pseudocounts = 0.01
     profile = MOODS.parsers.pfm_to_log_odds(dummy_file, bg, pseudocounts)
+    print(profile)
+    exit(0)
     pvalue_threshold = MOODS.tools.threshold_from_p(profile, bg, options.pvalue_threshold, 4)
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
