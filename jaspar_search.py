@@ -163,7 +163,7 @@ if __name__ == "__main__":
                 # Initialize #
                 relative_score = (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min)
                 # If relative score greater than threshold... #
-                if (start + chunk_start, strand) in relative_scores:
+                if relative_score >= options.rel_score_thresh:
                     functions.write(dummy_file, "%s\t%s\t%s\t%s" % (start + chunk_start, strand, relative_score, int(log(p_value) * 1000 / -10)))
             # Remove dummy FASTA file if exist #
             if os.path.exists(dummy_fasta): os.remove(dummy_fasta)
