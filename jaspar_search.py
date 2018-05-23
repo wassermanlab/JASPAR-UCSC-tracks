@@ -140,7 +140,7 @@ if __name__ == "__main__":
                 shutil.copy(results_file, output_file)
                 continue
         # Get chunks #
-        m = 10000;
+        m = 100;
         n = len(profile) - 1
         chunks = [sequence[i:i+m] for i in range(0, len(sequence), m - n)]
         # If last chunk is too small, merge it to the previous #
