@@ -26,7 +26,7 @@ def parse_options():
     parser.add_option("-f", action="store", type="string", dest="fasta_file", help="FASTA file (e.g. chr1.fa)", metavar="<fasta_file>")
     parser.add_option("-m", action="store", type="string", dest="matrix_file", help="JASPAR profile (e.g. MA0002.2.pfm)", metavar="<matrix_file>")
     parser.add_option("-o", default="./", action="store", type="string", dest="output_file", help="Output file (default = stdout)", metavar="<output_file>")
-    parser.add_option("-p", default=0.05, action="store", type=float, dest="pvalue_threshold", help="P-value threshold for TFBS matches; default = 0.05", metavar="<pvalue_threshold>")
+    parser.add_option("-p", default=0.05, action="store", type="float", dest="pvalue_threshold", help="P-value threshold for TFBS matches; default = 0.05", metavar="<pvalue_threshold>")
     parser.add_option("-s", default="80%", action="store", type="string", dest="score_threshold", help="Score threshold for TFBS matches; specify as absolute, e.g. 14.1, or relative score, e.g. 80%; default = 80%", metavar="<score_threshold>")
 
     (options, args) = parser.parse_args()
