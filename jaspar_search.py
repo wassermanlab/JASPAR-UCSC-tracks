@@ -88,9 +88,8 @@ def fimo_scan(meme_dir, meme_file, fasta_file, thresh=0.05):
         if line.startswith("#"): continue
         line = line.split("\t")
         if len(line) < 7: continue
-        #pattern name, sequence name, start, stop, strand, score, p-value, q-value, matched sequence
-        print(line)
-        try: yield line[1], int(line[2]), int(line[3]), line[4], float(line[5]), float(line[6])
+        # ..., sequence name, start, stop, strand, score, p-value, q-value, matched sequence
+        try: yield line[-8], int(line[-7]), int(line[-6]), line[-5], float(line[-4]), float(line[-3])
         except: continue
 
 #-------------#
