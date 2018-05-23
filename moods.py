@@ -60,7 +60,7 @@ if __name__ == "__main__":
     bg = MOODS.tools.flat_bg(4)
     pseudocounts = 0.01
     profile = MOODS.parsers.pfm_to_log_odds(dummy_file, bg, pseudocounts)
-    pvalue_threshold = MOODS.tools.threshold_from_p(profile, bg, options.pvalue_threshold)
+    pvalue_threshold = MOODS.tools.threshold_from_p(profile, bg, options.pvalue_threshold, 4)
     print("here")
     exit(0)
     # For each header, sequence... #
