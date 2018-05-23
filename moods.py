@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # Initialize MOODS #
     bg = [0.25,0.25,0.25,0.25]
     pseudocounts = 0.01
-    profile = MOODS.parsers.pfm_to_log_odds(dummy_file, bg, pseudocounts)
+    profile = MOODS.parsers.adm_to_log_odds(dummy_file, bg, pseudocounts)
     print(profile)
     exit(0)
     pvalue_threshold = MOODS.tools.threshold_from_p(profile, bg, options.pvalue_threshold, 4)
