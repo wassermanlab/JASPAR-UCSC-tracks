@@ -1,5 +1,5 @@
 #!/usr/bin/env python2.7
-import os
+import os, re
 from Bio import motifs
 from Bio.Alphabet import IUPAC
 from Bio.Seq import Seq
