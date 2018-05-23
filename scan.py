@@ -3,6 +3,7 @@ import os
 from Bio import motifs
 from Bio.Alphabet import IUPAC
 from Bio.Seq import Seq
+import optparse
 
 # Import my functions #
 import functions
