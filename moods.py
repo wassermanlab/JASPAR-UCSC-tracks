@@ -55,7 +55,7 @@ if __name__ == "__main__":
     else: score_threshold = float(options.threshold)
     # Create dummy profile #
     dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s.pfm" % (os.path.basename(__file__), os.getpid()))
-    print(motifs.write(profile, "pfm"))
+    print(motifs.write([profile], "pfm"))
     exit(0)
     # Initialize #
     bg = MOODS.tools.flat_bg(4)
