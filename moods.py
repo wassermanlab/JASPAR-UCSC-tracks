@@ -60,9 +60,9 @@ if __name__ == "__main__":
     bg = MOODS.tools.flat_bg(4)
     pseudocounts = 0.01
     profile = MOODS.parsers.pfm_to_log_odds(dummy_file, bg, pseudocounts)
+    pvalue_threshold = MOODS.tools.threshold_from_p(profile, bg, options.pvalue_threshold)
     print("here")
     exit(0)
-    pvalue_threshold = MOODS.tools.threshold_from_p(profile, bg, options.pvalue_threshold)
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
         # Get results #
