@@ -64,7 +64,9 @@ if __name__ == "__main__":
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
         # Get results #
-        results = MOODS.scan.scan_dna(sequence, profile, bg, pvalue_threshold, 7)
+        print("here")
+        exit(0)
+        # results = MOODS.scan.scan_dna(sequence, profile, bg, pvalue_threshold, 7)
         # For each result... #
         for result in results:
             print(dir(result))
