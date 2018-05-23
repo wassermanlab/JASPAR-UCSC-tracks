@@ -58,10 +58,10 @@ if __name__ == "__main__":
         # For each match position, score... #
         for position, score in profile.pssm.search(sequence, threshold=score_threshold):
             if position < 0:
-                position += len(profile)
+                position += len(sequence)
                 strand = "-"
             else:
                 strand = "+"
             # Write #
-            functions.write(options.output_file, "%s\t%s\t%s\t%s\t%.3f" % (header, position, position + len(profile), strand, (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min)))
+            functions.write(options.output_file, "%s\t%s\t%s\t%s\t%.3f" % (header, position + 1, position + len(profile), strand, (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min)))
             
