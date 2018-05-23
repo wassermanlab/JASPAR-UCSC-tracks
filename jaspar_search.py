@@ -89,7 +89,7 @@ def fimo_scan(meme_dir, meme_file, fasta_file, thresh=0.05):
         line = line.split("\t")
         if len(line) < 7: continue
         #pattern name, sequence name, start, stop, strand, score, p-value, q-value, matched sequence
-        try: yield line[1], int(line[2]), int(line[3]), line[4], float(line[6])
+        try: yield line[1], int(line[2]), int(line[3]), line[4], float(line[5]), float(line[6])
         except: continue
 
 #-------------#
@@ -116,6 +116,7 @@ if __name__ == "__main__":
     # Load profile #
     with open(pfm_file) as f:
         profile = motifs.read(f, "jaspar")
+        profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
 
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
@@ -146,21 +147,24 @@ if __name__ == "__main__":
         # For each chunk... #
         for i in tqdm(range(len(chunks)), desc="Scan %s" % header):
             # Initialize #
-            relative_scores = {}
+#            relative_scores = {}
             chunk_start = i * (m - n)
             # Remove dummy FASTA file if exist #
             if os.path.exists(dummy_fasta): os.remove(dummy_fasta)
             # Create dummy FASTA file #
             functions.write(dummy_fasta, ">%s\n%s" % (header, chunks[i]))
-            # For each jaspar match... #
-            for chromosome, start, end, strand, relative_score in scan(pfm_file, dummy_fasta, options.rel_score_thresh):
-                # Add to relative scores #
-                relative_scores.setdefault((start + chunk_start, strand), int(relative_score * 1000))
+#            Deprecated!!! Relative scores are now calculated from FIMO.
+#            # For each jaspar match... #
+#            for chromosome, start, end, strand, relative_score in scan(pfm_file, dummy_fasta, options.rel_score_thresh):
+#                # Add to relative scores #
+#                relative_scores.setdefault((start + chunk_start, strand), int(relative_score * 1000))
             # For each fimo match... #
-            for chromosome, start, end, strand, p_value in fimo_scan(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, options.p_value_thresh):
-                # If match in relative scores... #
+            for chromosome, start, end, strand, score, p_value in fimo_scan(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, options.p_value_thresh):
+                # Initialize #
+                relative_score = (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min)
+                # If relative score greater than threshold... #
                 if (start + chunk_start, strand) in relative_scores:
-                    functions.write(dummy_file, "%s\t%s\t%s\t%s" % (start + chunk_start, strand, relative_scores[(start + chunk_start, strand)], int(log(p_value) * 1000 / -10)))
+                    functions.write(dummy_file, "%s\t%s\t%s\t%s" % (start + chunk_start, strand, relative_score, int(log(p_value) * 1000 / -10)))
             # Remove dummy FASTA file if exist #
             if os.path.exists(dummy_fasta): os.remove(dummy_fasta)
         # If dummy file exists... #
