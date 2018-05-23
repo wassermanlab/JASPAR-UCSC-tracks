@@ -53,24 +53,18 @@ def scan(matrix_file, fasta_file, thresh=0.75):
     if thresh <= 1: thresh = int(thresh * 100)
     
     try:
-        print(" ".join([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%']))
         # Exec scan.pl #
         process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
     except:
-        print(" ".join([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%']))
         # Exec scan.py instead #
         process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
-    print(process)
-    exit(0)
     # For each line... #
     for line in process.split("\n"):
         # If match... #
-        if line.startswith("chr"):
-            #printf $ofh "$chrom\t%d\t%d\t%s\t%4.0f\n"
-            try:
-                chromosome, start, end, strand, relative_score = line.split("\t")
-                yield chromosome, int(start), int(end), strand, float(relative_score) 
-            except: continue
+        try:
+            chromosome, start, end, strand, relative_score = line.split("\t")
+            yield chromosome, int(start), int(end), strand, float(relative_score) 
+        except: continue
 
 def fimo_scan(meme_dir, meme_file, fasta_file, thresh=0.05):
     """
