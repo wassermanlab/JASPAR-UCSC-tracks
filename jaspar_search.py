@@ -39,7 +39,7 @@ def parse_options():
 
     return options
 
-def jaspar_search(matrix_file, fasta_file, thresh=0.75):
+def scan(matrix_file, fasta_file, thresh=0.75):
     """
     @input:
     matrix_file {str} e.g. MA0002.2.pfm
@@ -50,10 +50,16 @@ def jaspar_search(matrix_file, fasta_file, thresh=0.75):
     """   
 
     # Initialize #
-    jaspar_search = os.path.join(os.path.abspath(os.path.dirname(__file__)), "jaspar_search.pl")
     if thresh <= 1: thresh = int(thresh * 100)
-    # Exec process #
-    process = subprocess.check_output([jaspar_search, "-f", fasta_file, "-m", matrix_file, "-th", str(thresh) + '%'], stderr=subprocess.STDOUT)
+    
+    try:
+        # Exec scan.pl #
+        scan = os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl")
+        process = subprocess.check_output([scan, "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
+    except:
+        # Exec scan.py instead #
+        scan = os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py")
+        process = subprocess.check_output([scan, "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
     # For each line... #
     for line in process.split("\n"):
         # If match... #
@@ -64,7 +70,7 @@ def jaspar_search(matrix_file, fasta_file, thresh=0.75):
                 yield chromosome, int(start), int(end), strand, float(relative_score) 
             except: continue
 
-def fimo_search(meme_dir, meme_file, fasta_file, thresh=0.05):
+def fimo_scan(meme_dir, meme_file, fasta_file, thresh=0.05):
     """
     @input:
     meme_dir {directory} i.e. bin directory where all MEME executables are located
@@ -77,6 +83,7 @@ def fimo_search(meme_dir, meme_file, fasta_file, thresh=0.05):
 
     # Initialize #
     fimo = os.path.join(os.path.abspath(os.path.dirname(__file__)), "fimo")
+
     # Exec process #
     process = subprocess.check_output([os.path.join(meme_dir, "fimo"), "--thresh", str(thresh), "--text", meme_file, fasta_file], stderr=subprocess.STDOUT)
     # For each line... #
@@ -149,11 +156,11 @@ if __name__ == "__main__":
             # Create dummy FASTA file #
             functions.write(dummy_fasta, ">%s\n%s" % (header, chunks[i]))
             # For each jaspar match... #
-            for chromosome, start, end, strand, relative_score in jaspar_search(pfm_file, dummy_fasta, options.rel_score_thresh):
+            for chromosome, start, end, strand, relative_score in scan(pfm_file, dummy_fasta, options.rel_score_thresh):
                 # Add to relative scores #
                 relative_scores.setdefault((start + chunk_start, strand), int(relative_score * 1000))
             # For each fimo match... #
-            for chromosome, start, end, strand, p_value in fimo_search(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, options.p_value_thresh):
+            for chromosome, start, end, strand, p_value in fimo_scan(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, options.p_value_thresh):
                 # If match in relative scores... #
                 if (start + chunk_start, strand) in relative_scores:
                     functions.write(dummy_file, "%s\t%s\t%s\t%s" % (start + chunk_start, strand, relative_scores[(start + chunk_start, strand)], int(log(p_value) * 1000 / -10)))
