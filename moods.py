@@ -55,22 +55,20 @@ if __name__ == "__main__":
     else: score_threshold = float(options.threshold)
     # Create dummy profile #
     dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s.pfm" % (os.path.basename(__file__), os.getpid()))
-    functions.write(dummy_file, motifs.write([profile], "pfm"))
-    # Initialize #
+    # For each line... #
+    for line in motifs.write([profile], "pfm"):
+        freqs = re.findall("(\S+)", line)
+        if len(freqs) != 0: functions.write(dummy_file, "\t".join(freqs))
+    
+    # Initialize MOODS #
     bg = MOODS.tools.flat_bg(4)
     pseudocounts = 0.01
     profile = MOODS.parsers.pfm_to_log_odds(dummy_file, bg, pseudocounts)
-    print(profile)
-    exit(0)
     pvalue_threshold = MOODS.tools.threshold_from_p(profile, bg, options.pvalue_threshold, 4)
-    print("here")
-    exit(0)
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
         # Get results #
-        print("here")
-        exit(0)
-        # results = MOODS.scan.scan_dna(sequence, profile, bg, pvalue_threshold, 7)
+        results = MOODS.scan.scan_dna(sequence, profile, bg, pvalue_threshold, 7)
         # For each result... #
         for result in results:
             print(dir(result))
