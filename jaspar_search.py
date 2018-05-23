@@ -53,9 +53,11 @@ def scan(matrix_file, fasta_file, thresh=0.75):
     if thresh <= 1: thresh = int(thresh * 100)
     
     try:
+        print(" ".join([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%']))
         # Exec scan.pl #
         process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
     except:
+        print(" ".join([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%']))
         # Exec scan.py instead #
         process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
     print(process)
