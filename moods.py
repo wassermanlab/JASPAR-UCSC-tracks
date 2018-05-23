@@ -20,8 +20,9 @@ def parse_options():
 
     """
 
-    parser = optparse.OptionParser("./%prog -f <fasta_file> -m <matrix_file> [-o <output_file> -p <pvalue_threshold> -s <score_threshold>]")
+    parser = optparse.OptionParser("./%prog -f <fasta_file> -m <matrix_file> [--dummy=<dummy_dir> -o <output_file> -p <pvalue_threshold> -s <score_threshold>]")
 
+    parser.add_option("--dummy", default="/tmp/", action="store", type="string", dest="dummy_dir", help="Dummy directory (default = /tmp/)", metavar="<dummy_dir>")
     parser.add_option("-f", action="store", type="string", dest="fasta_file", help="FASTA file (e.g. chr1.fa)", metavar="<fasta_file>")
     parser.add_option("-m", action="store", type="string", dest="matrix_file", help="JASPAR profile (e.g. MA0002.2.pfm)", metavar="<matrix_file>")
     parser.add_option("-o", default="./", action="store", type="string", dest="output_file", help="Output file (default = stdout)", metavar="<output_file>")
@@ -46,13 +47,16 @@ if __name__ == "__main__":
 
     # Load profile #
     with open(os.path.abspath(options.matrix_file)) as f:
-        jaspar_profile = motifs.read(f, "jaspar")
-        jaspar_profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(jaspar_profile)
+        profile = motifs.read(f, "jaspar")
+        profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
     # Get score threshold #
     m = re.search("^(.+)\%$", options.score_threshold)
-    if m: score_threshold = (jaspar_profile.pssm.max - jaspar_profile.pssm.min) * float(m.group(1))/100 + jaspar_profile.pssm.min
+    if m: score_threshold = (profile.pssm.max - profile.pssm.min) * float(m.group(1))/100 + profile.pssm.min
     else: score_threshold = float(options.threshold)
-
+    # Create dummy profile #
+    dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s.pfm" % (os.path.basename(__file__), os.getpid()))
+    print(dir(profile))
+    exit(0)
     # Initialize #
     bg = MOODS.tools.flat_bg(4)
     pseudocounts = 0.01
@@ -68,5 +72,6 @@ if __name__ == "__main__":
             exit(0)
             # Write #
             functions.write(options.output_file, "%s\t%s\t%s\t%s\t%.3f" % (header, position + 1, position + len(profile), strand, (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min)))
-            
+    # Remove dummy profile #
+    os.remove(dummy_file)
 
