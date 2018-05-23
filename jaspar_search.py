@@ -54,16 +54,16 @@ def scan(matrix_file, fasta_file, thresh=0.75):
     
     try:
         print("here")
-        exit(0)
         # Exec scan.pl #
         scan = os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl")
         process = subprocess.check_output([scan, "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
     except:
         print("there")
-        exit(0)
         # Exec scan.py instead #
         scan = os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py")
         process = subprocess.check_output([scan, "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
+    print(process)
+    exit(0)
     # For each line... #
     for line in process.split("\n"):
         # If match... #
