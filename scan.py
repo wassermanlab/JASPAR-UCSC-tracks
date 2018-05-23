@@ -62,5 +62,5 @@ if __name__ == "__main__":
             else:
                 strand = "+"
             # Write #
-            functions.write(options.output_file, "%s\t%s\t%s\t%s\t%.3f" % (header, position, position + len(profile), strand, (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min))
+            functions.write(options.output_file, "%s\t%s\t%s\t%s\t%.3f" % (header, position, position + len(profile), strand, (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min)))
             
