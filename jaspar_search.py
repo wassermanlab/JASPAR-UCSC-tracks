@@ -116,8 +116,9 @@ if __name__ == "__main__":
     # Load profile #
     with open(pfm_file) as f:
         profile = motifs.read(f, "jaspar")
-        profile.pseudocounts = {'A': 0.25000, 'C': 0.25000, 'T': 0.25000, 'G': 0.25000}
-
+        print(profile.consensus)
+        print(profile.anticonsensus)
+    exit(0)
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
         # Initialize #
