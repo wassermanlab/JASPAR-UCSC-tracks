@@ -40,32 +40,32 @@ def parse_options():
 
     return options
 
-def scan(matrix_file, fasta_file, thresh=0.75):
-    """
-    @input:
-    matrix_file {str} e.g. MA0002.2.pfm
-    fasta_file {filename} e.g. chr1.fa
-    thresh {float} e.g. 0.75
-    @yield:
-
-    """   
-
-    # Initialize #
-    if thresh <= 1: thresh = int(thresh * 100)
-    
-    try:
-        # Exec scan.pl #
-        process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
-    except:
-        # Exec scan.py instead #
-        process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
-    # For each line... #
-    for line in process.split("\n"):
-        # If match... #
-        try:
-            chromosome, start, end, strand, relative_score = line.split("\t")
-            yield chromosome, int(start), int(end), strand, float(relative_score) 
-        except: continue
+#def scan(matrix_file, fasta_file, thresh=0.75):
+#    """
+#    @input:
+#    matrix_file {str} e.g. MA0002.2.pfm
+#    fasta_file {filename} e.g. chr1.fa
+#    thresh {float} e.g. 0.75
+#    @yield:
+#
+#    """   
+#
+#    # Initialize #
+#    if thresh <= 1: thresh = int(thresh * 100)
+#    
+#    try:
+#        # Exec scan.pl #
+#        process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.pl"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
+#    except:
+#        # Exec scan.py instead #
+#        process = subprocess.check_output([os.path.join(os.path.abspath(os.path.dirname(__file__)), "scan.py"), "-f", fasta_file, "-m", matrix_file, "-t", str(thresh) + '%'], stderr=subprocess.STDOUT)
+#    # For each line... #
+#    for line in process.split("\n"):
+#        # If match... #
+#        try:
+#            chromosome, start, end, strand, relative_score = line.split("\t")
+#            yield chromosome, int(start), int(end), strand, float(relative_score) 
+#        except: continue
 
 def fimo_scan(meme_dir, meme_file, fasta_file, thresh=0.05):
     """
@@ -106,7 +106,7 @@ if __name__ == "__main__":
         os.makedirs(os.path.abspath(options.output_dir))
 
     # Initialize #
-    dummy_fasta = os.path.join(os.path.abspath(options.dummy_dir), "%s.fa" % os.getpid())
+    dummy_fasta = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s.fa" % (os.path.basename(__file__), os.getpid()))
     if os.path.exists(os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % options.matrix_id)):
         pfm_file = os.path.join(os.path.abspath(options.profiles_dir), "%s.pfm" % options.matrix_id)
     elif os.path.exists(os.path.join(os.path.abspath(options.profiles_dir), "%s.jaspar" % options.matrix_id)):
@@ -116,13 +116,19 @@ if __name__ == "__main__":
     # Load profile #
     with open(pfm_file) as f:
         profile = motifs.read(f, "jaspar")
-        print(profile.consensus)
-        print(profile.anticonsensus)
-    exit(0)
+
+    # Get max/min fimo scores for profile #
+    functions.write(dummy_fasta, ">consensus\n%s" % profile.consensus)
+    functions.write(dummy_fasta, ">anticonsensus\n%s" % profile.anticonsensus)
+    # For each fimo match... #
+    for name, start, end, strand, score, p_value in fimo_scan(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, 1.0):
+        if name == "consensus" and strand == "+": max_fimo_score = score
+        if name == "anticonsensus" and strand == "+": min_fimo_score = score
+
     # For each header, sequence... #
     for header, sequence in functions.parse_fasta_file(os.path.abspath(options.fasta_file)):
         # Initialize #
-        dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s.tab" % (options.matrix_id, header))
+        dummy_file = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s.tab" % (os.path.basename(__file__), os.getpid()))
         output_file = os.path.join(os.path.abspath(options.output_dir), "%s.%s.tab.gz" % (options.matrix_id, header))
         # Remove dummy file if exist #
         if os.path.exists(dummy_file): os.remove(dummy_file)
@@ -160,9 +166,9 @@ if __name__ == "__main__":
 #                # Add to relative scores #
 #                relative_scores.setdefault((start + chunk_start, strand), int(relative_score * 1000))
             # For each fimo match... #
-            for chromosome, start, end, strand, score, p_value in fimo_scan(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, options.p_value_thresh):
+            for name, start, end, strand, score, p_value in fimo_scan(os.path.abspath(options.meme_dir), os.path.join(os.path.abspath(options.profiles_dir), "%s.meme" % options.matrix_id), dummy_fasta, options.p_value_thresh):
                 # Initialize #
-                relative_score = (score - profile.pssm.min) / (profile.pssm.max - profile.pssm.min)
+                relative_score = (score - min_fimo_score) / (max_fimo_score - min_fimo_score)
                 # If relative score greater than threshold... #
                 if relative_score >= options.rel_score_thresh:
                     functions.write(dummy_file, "%s\t%s\t%s\t%s" % (start + chunk_start, strand, relative_score, int(log(p_value) * 1000 / -10)))
