@@ -2,28 +2,27 @@
 
 =head1 NAME
 
-scan.pl
+jaspar_search.pl
 
 =head1 SYNOPSIS
 
-  scan.pl
-        -f fasta_file
-        -m matrix_file
-        [-o out_file]
-        [-th threshold]
+  jaspar_search.pl
+            -f fasta_file
+            -m matrix_file
+            [-th threshold]
+            [-o out_file]
 
 =head1 ARGUMENTS
  
-  -f fasta_file     = FASTA file containing the sequence to be
-                      scanned
-  -m matrix_file    = JASPAR profile with which to search the
+  -f fasta_file     = FASTA file containing the sequence to be scanned
+  -m matrix_file    = JASPAR TFBS profile with which to search the
                       sequence(s)
-  -o out_file       = Output file to which to write TFBS hits. If
-                      not provided, write to stdout
-  -t threshold      = Minimum score of putative TFBS hit to report;
+  -th threshold     = Minimum score of putative TFBS hit to report.
                       Specify as an absolute score, i.e. 14.1 or as
-                      a relative score, i.e. 80%;
+                      a relative score, i.e. 80%.
                       DEFAULT = 80%
+  -o out_file       = Output file to which to write TFBS hits. If not
+                      provided, write to stdout.
 
 =head1 DESCRIPTION
 
@@ -35,13 +34,12 @@ are written to the output file if provided or to standard output otherwise.
 =head1 AUTHOR
 
   David Arenillas
-  E-mail: dave@cmmt.ubc.ca
-  
-  Edited by Oriol Fornes (May 23, 2018)
-  E-mail: oriol@cmmt.ubc.ca
-
   Wasserman Lab
   University of British Columbia
+  
+  E-mail: dave@cmmt.ubc.ca
+  
+  Edited by Oriol Fornes @ Wasserman Lab on May 15, 2018
 
 =cut
 
@@ -57,13 +55,13 @@ use constant TFBS_THRESHOLD => "80%";
 
 my $fasta_file;
 my $matrix_file;
-my $out_file;
 my $threshold;
+my $out_file;
 GetOptions(
-    'f=s'   => \$fasta_file,
-    'm=s'   => \$matrix_file,
-    'o=s'   => \$out_file,
-    't=s'   => \$threshold
+    'f=s'     => \$fasta_file,
+    'm=s'     => \$matrix_file,
+    'th=s'    => \$threshold,
+    'o=s'     => \$out_file
 );
 
 $threshold  = TFBS_THRESHOLD if !defined $threshold;
@@ -121,7 +119,8 @@ my $seqio = Bio::SeqIO->new(-file => $fasta_file, '-format' => 'Fasta');
 # While sequences... #
 while(my $seq = $seqio->next_seq) {
     # do stuff with $string
-    my $header = $seq->display_id;
+    my $chrom = $seq->display_id;
+    my $chrom_size = $seq->length;
 
     my $siteset = $pwm->search_seq(-seq => $seq->seq, -threshold => "$threshold");
 
@@ -129,7 +128,8 @@ while(my $seq = $seqio->next_seq) {
         my $it = $siteset->Iterator(-sort_by => 'start');
         while (my $site = $it->next) {
             my $strand = $site->strand ? ($site->strand > 0 ? '+' : '-') : '?';
-            printf OFH "$header\t%d\t%d\t%s\t%.3f\n",
+
+            printf OFH "$chrom\t%d\t%d\t%s\t%.3f\n",
             $site->start,
             $site->end,
             $strand,
