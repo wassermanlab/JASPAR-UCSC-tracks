@@ -1,4 +1,4 @@
-import os, sys, re
+import os, sys
 import gzip
 import shutil
 
@@ -30,42 +30,6 @@ def parse_file(file_name, gz=False):
     else:
         raise ValueError("File %s does not exist!" % file_name)
 
-def parse_fasta_file(file_name, gz=False, clean=True, uracils_to_thymines=True):
-    """
-    This function parses any FASTA file and yields sequences one by one
-    in the form header, sequence.
-
-    @input:
-    file_name {string}
-    @return:
-    line {list} header, sequence
-
-    """
-
-    # Initialize #
-    header = ""
-    sequence = ""
-    # For each line... #
-    for line in parse_file(file_name, gz):
-        if len(line) == 0: continue
-        if line.startswith("#"): continue
-        if line.startswith(">"):
-            if sequence != "":
-                if clean:
-                    sequence = re.sub("\W|\d", "X", sequence)
-                yield header, sequence
-            m = re.search("^>(.+)", line)
-            header = m.group(1)
-            sequence = ""
-        else:
-            sequence += line.upper()
-    if clean:
-        # Convert non-nucleotides to Ns #
-        sequence = re.sub("[^ACGTU]", "N", sequence)
-    if uracils_to_thymines:
-        # Convert Us to Ts #
-        sequence = re.sub("U", "T", sequence)
-
 def parse_tsv_file(file_name, gz=False):
     """
     This function parses any TSV file and yields lines as a list.
@@ -92,7 +56,21 @@ def write(file_name=None, line=None):
     line {string}
 
     """
+
     if file_name is None: sys.stdout.write("%s\n" % line)
     else:
         with open(file_name, "a") as out_file:
             out_file.write("%s\n" % line)
+
+def compress(input_file, output_file):
+    """
+    This function compresses a file using gzip.
+
+    @input:
+    input_file {filename}
+    output_file {filename}
+
+    """
+
+    with open(input_file, "rb") as in_file, gzip.open(output_file, "wb") as out_file:
+        shutil.copyfileobj(in_file, out_file)
