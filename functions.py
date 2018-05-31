@@ -61,16 +61,3 @@ def write(file_name=None, line=None):
     else:
         with open(file_name, "a") as out_file:
             out_file.write("%s\n" % line)
-
-def compress(input_file, output_file):
-    """
-    This function compresses a file using gzip.
-
-    @input:
-    input_file {filename}
-    output_file {filename}
-
-    """
-
-    with open(input_file, "rb") as in_file, gzip.open(output_file, "wb") as out_file:
-        shutil.copyfileobj(in_file, out_file)

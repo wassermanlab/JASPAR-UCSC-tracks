@@ -21,7 +21,7 @@ def parse_options():
 
     """
 
-    parser = optparse.OptionParser("./%prog -f <files_dir> -i <input_file> -s <pwmscan_dir> [-b <background> --dummy=<dummy_dir> -m <matrix_id> -o <output_dir> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh> -t <taxon>] [-l -z]")
+    parser = optparse.OptionParser("./%prog -f <files_dir> -i <input_file> -s <pwmscan_dir> [-b <background> --dummy=<dummy_dir> -m <matrix_id> -o <output_dir> --pv-thresh=<p_value_thresh> --rs-thresh=<rel_score_thresh> -t <taxon>] [-l]")
 
     parser.add_option("-f", action="store", type="string", dest="files_dir", help="Files directory (output directory from make_files.py)", metavar="<files_dir>")
     parser.add_option("-i", action="store", type="string", dest="input_file", help="Input file (i.e. one or more sequences in FASTA format)", metavar="<input_file>")
@@ -39,7 +39,6 @@ def parse_options():
 
     group = optparse.OptionGroup(parser, "Search modes")
     group.add_option("-l", "--latest", default=False, action="store_true", dest="latest", help="Latest mode (only use the latest version of each profile; default = False)")
-    group.add_option("-z", "--gzip", default=False, action="store_true", dest="gzip", help="Gzip mode (compress output; default = False)")
     parser.add_option_group(group)
 
     (options, args) = parser.parse_args()
@@ -106,12 +105,12 @@ if __name__ == "__main__":
             profiles.setdefault(profile_file[:6], [])
             if options.latest:
                 if len(profiles[profile_file[:6]]) == 1: continue
-            profiles[profile_file[:6]].append(profile)
+            profiles[profile_file[:6]].append((profile_file[:8], profile))
 
-    # For each matrix ID... #
-    for matrix_id in tqdm(sorted(profiles.keys()), desc="PWM scan"):
-        # For each profile... #
-        for profile in profiles[matrix_id]:
+    # For each key... #
+    for key in tqdm(sorted(profiles.keys()), desc="PWM scan"):
+        # For each matrix ID, profile... #
+        for matrix_id, profile in profiles[key]:
             # Initialize #
             cutoff = None
             dummy_bed = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s.bed" % (os.path.basename(__file__), os.getpid()))
@@ -135,16 +134,13 @@ if __name__ == "__main__":
             except: raise ValueError("Could not calculate distribution of matrix scores!")
             # Scan DNA sequence for TFBS matches #
             try:
-                bash_command = ''' %s -m %s -c %s %s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' > %s ''' % (os.path.join(os.path.abspath(options.pwmscan_dir), "matrix_scan"), dummy_pwm, cutoff, os.path.abspath(options.input_file), dummy_tsv, profile.name, dummy_bed)
+                bash_command = ''' %s -m %s -c %s %s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | gzip > %s ''' % (os.path.join(os.path.abspath(options.pwmscan_dir), "matrix_scan"), dummy_pwm, cutoff, os.path.abspath(options.input_file), dummy_tsv, profile.name, dummy_bed)
                 process = subprocess.call(bash_command, shell=True, stderr=subprocess.STDOUT)
             except:
                 raise ValueError("Could not scan DNA sequence file for TFBS matches!")
             # Write output #
-            output_file = os.path.join(os.path.abspath(options.output_dir), "%s.bed" % profile.name)
-            if options.gzip:
-                output_file += ".gz"
-                functions.compress(dummy_bed, output_file)
-            else: shutil.copy(dummy_bed, output_file)
+            output_file = os.path.join(os.path.abspath(options.output_dir), "%s.bed.gz" % matrix_id)
+            shutil.copy(dummy_bed, output_file)
             # Remove files #
             if os.path.exists(dummy_bed): os.remove(dummy_bed)
             if os.path.exists(dummy_pwm): os.remove(dummy_pwm)
