@@ -1,8 +1,6 @@
 import os, sys
-import gzip
-import shutil
 
-def parse_file(file_name, gz=False):
+def parse_file(file_name):
     """
     This function parses any file and yields lines one by one.
     
@@ -14,37 +12,15 @@ def parse_file(file_name, gz=False):
     """
  
     if os.path.exists(file_name):
-        # Initialize #
-        f = None
         # Open file handle #
-        if gz:
-            try: f = gzip.open(file_name, "rt")
-            except: raise ValueError("Could not open file %s" % file_name)
-        else:
-            try: f = open(file_name, "rt")
-            except: raise ValueError("Could not open file %s" % file_name)
+        try: f = open(file_name, "rt")
+        except: raise ValueError("Could not open file %s" % file_name)
         # For each line... #
         for line in f:
             yield line.strip("\n")
         f.close()
     else:
         raise ValueError("File %s does not exist!" % file_name)
-
-def parse_tsv_file(file_name, gz=False):
-    """
-    This function parses any TSV file and yields lines as a list.
-
-    @input:
-    file_name {string}
-    @return: {list}
-    line {list}
-
-    """
-
-    # For each line... #
-    for line in parse_file(file_name, gz):
-        line = line.split("\t")
-        yield line
 
 def write(file_name=None, line=None):
     """
