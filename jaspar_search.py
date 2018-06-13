@@ -99,7 +99,7 @@ def parallelize_pwm_scan(i):
         except: raise ValueError("Could not calculate distribution of matrix scores!")
         # Scan DNA sequence for TFBS matches #
         try:
-            bash_command = ''' %s -m %s -c %s %s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | gzip > %s ''' % (os.path.join(os.path.abspath(options.pwmscan_dir), "matrix_scan"), dummy_pwm, cutoff, os.path.abspath(options.input_file), dummy_tsv, profile.name, dummy_bed)
+            bash_command = '''%s -m %s -c %s %s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | gzip > %s''' % (os.path.join(os.path.abspath(options.pwmscan_dir), "matrix_scan"), dummy_pwm, cutoff, os.path.abspath(options.input_file), dummy_tsv, profile.name, dummy_bed)
             process = subprocess.call(bash_command, shell=True, stderr=subprocess.STDOUT)
         except:
             raise ValueError("Could not scan DNA sequence file for TFBS matches!")
