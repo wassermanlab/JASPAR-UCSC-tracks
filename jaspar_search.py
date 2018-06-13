@@ -75,6 +75,12 @@ def parallelize_pwm_scan(i):
         dummy_bed = os.path.join(dummy_dir, "%s.bed" % matrix_id)
         dummy_pwm = os.path.join(dummy_dir, "%s.pwm" % matrix_id)
         dummy_tsv = os.path.join(dummy_dir, "%s.tsv" % matrix_id)
+
+        # Add background #
+        background = options.background.split(",")
+        profile.background = {"A": float(background[0]), "C": float(background[1]), "G": float(background[2]), "T": float(background[3])}
+        # Add JASPAR pseudocounts #
+        profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
         # Convert to PWMScan format #
         for i in range(len(profile.pssm["A"])):
             functions.write(dummy_pwm, "\t".join([str(int(profile.pssm[j][i] * 100)) for j in "ACGT"]))
@@ -100,7 +106,11 @@ def parallelize_pwm_scan(i):
         # Write output #
         output_file = os.path.join(os.path.abspath(options.output_dir), "%s.bed.gz" % matrix_id)
         shutil.copy(dummy_bed, output_file)
-    
+        # Remove files #
+        os.remove(dummy_bed)
+        os.remove(dummy_pwm)
+        os.remove(dummy_tsv)
+
 #-------------#
 # Main        #
 #-------------#
@@ -119,7 +129,6 @@ if __name__ == "__main__":
 
     # Initialize #
     profiles = {}
-    background = options.background.split(",")
     dummy_dir = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s" % (os.path.basename(__file__), os.getpid()))
     if not os.path.exists(dummy_dir): os.makedirs(dummy_dir)
     taxons = ["fungi", "insects", "nematodes", "plants", "vertebrates"]
@@ -137,10 +146,6 @@ if __name__ == "__main__":
             # Load profile #
             with open(os.path.join(os.path.abspath(options.files_dir), taxon, profile_file)) as f:
                 profile = motifs.read(f, "jaspar")
-            # Add background #
-            profile.background = {"A": float(background[0]), "C": float(background[1]), "G": float(background[2]), "T": float(background[3])}
-            # Add pseudocounts #
-            profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
             # Add profile #
             profiles.setdefault(profile_file[:6], [])
             if options.latest:
@@ -154,5 +159,5 @@ if __name__ == "__main__":
     pool.close()
     pool.join()
 
-    # Remove files #
+    # Remove dummy dir #
     shutil.rmtree(dummy_dir)
