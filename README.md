@@ -14,7 +14,7 @@ The original scripts used for the publication of [`JASPAR 2018`](https://doi.org
 ## Dependencies
 The scripts for creating the JASPAR UCSC tracks require the following dependencies:
 * [`PWMScan`](http://ccg.vital-it.ch/pwmscan)
-* `Python` (>=2.7)  with the [`Biopython`](http://biopython.org), [`numpy`](http://www.numpy.org) and [`tqdm`](https://tqdm.github.io) libraries
+* [`Python 2.7`](https://www.python.org/download/releases/2.7/) with the [`Biopython`](http://biopython.org), [`NumPy`](http://www.numpy.org) and [`tqdm`](https://tqdm.github.io) libraries
 * [`UCSC binaries`](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
 ## Usage
