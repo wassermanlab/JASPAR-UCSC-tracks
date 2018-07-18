@@ -58,7 +58,6 @@ def jaspar_search(matrix_file, fasta_file, thresh=0.75):
     for line in process.split("\n"):
         # If match... #
         if line.startswith("chr"):
-            #printf $ofh "$chrom\t%d\t%d\t%s\t%4.0f\n"
             try:
                 chromosome, start, end, strand, relative_score = line.split("\t")
                 yield chromosome, int(start), int(end), strand, float(relative_score) 
@@ -84,9 +83,13 @@ def fimo_search(meme_dir, meme_file, fasta_file, thresh=0.05):
         if line.startswith("#"): continue
         line = line.split("\t")
         if len(line) < 7: continue
-        #pattern name, sequence name, start, stop, strand, score, p-value, q-value, matched sequence
-        try: yield line[1], int(line[2]), int(line[3]), line[4], float(line[6])
-        except: continue
+        try:
+            # pattern_name, sequence_name, start, stop, strand, score, p-value, q-value, matched_sequence
+            yield line[1], int(line[2]), int(line[3]), line[4], float(line[6])
+        except:
+            # motif_id, motif_alt_id, sequence_name, start, stop, strand, score, p-value, q-value, matched_sequence 
+            yield line[2], int(line[3]), int(line[4]), line[5], float(line[7])	
+        else: continue
 
 #-------------#
 # Main        #
