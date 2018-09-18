@@ -75,14 +75,14 @@ def scan_profiles(profiles, input_file, pwmscan_dir, output_dir="./", background
 
     # Parallelize PWM scan #
     pool = Pool(threads)
-    parallelize_pwm_scan = partial(pwm_scan, input_file, pwmscan_dir, output_dir, background,
+    parallelize_scan_profile = partial(pwm_scan, input_file, pwmscan_dir, output_dir, background,
     p_value_thresh, rel_score_thresh, dummy_dir)
-    for _ in tqdm(pool.imap(parallelize_pwm_scan, iter(profiles)), desc="PWM scan", total=len(profiles)):
+    for _ in tqdm(pool.imap(parallelize_scan_profile, iter(profiles)), desc="PWM scan", total=len(profiles)):
         pass
     pool.close()
     pool.join()
 
-def pwm_scan(input_file, pwmscan_dir, output_dir="./", background=[0.25, 0.25, 0.25, 0.25],
+def scan_profile(input_file, pwmscan_dir, output_dir="./", background=[0.25, 0.25, 0.25, 0.25],
     p_value_thresh=0.05, rel_score_thresh=0.8, dummy_dir="/tmp/", profile=None):
     """
     """
