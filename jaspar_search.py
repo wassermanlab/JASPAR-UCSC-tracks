@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+
 import os, re
 from Bio import motifs
 from functools import partial
@@ -12,6 +13,16 @@ from tqdm import tqdm
 
 # Import my functions #
 import functions
+
+# Authorship #
+__author__ = "Oriol Fornes"
+__copyright__ = "Copyright 2018, The JASPAR Consortium"
+__credits__ = ["Aziz Khan", "Oriol Fornes", "Marius Gheorghe", "Robin van der Lee", "David J. Arenillas", "Wyeth W. Wasserman", "Anthony Mathelier"]
+__license__ = "LGPL"
+__version__ = "2.0.1"
+__maintainer__ = "Oriol Fornes"
+__email__ = "oriol@cmmt.ubc.ca"
+__status__ = "Development"
 
 #-------------#
 # Functions   #
