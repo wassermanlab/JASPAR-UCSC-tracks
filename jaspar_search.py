@@ -1,8 +1,10 @@
 #!/usr/bin/env python2.7
 import os, re
 from Bio import motifs
-from numpy import log10 as log
+from functools import partial
+from itertools import chain
 from multiprocessing import Pool
+from numpy import log10 as log
 import optparse
 import shutil
 import subprocess
@@ -66,59 +68,69 @@ def parse_options():
 
     return options
 
-def parallelize_pwm_scan(i):
+def scan_profiles(profiles, input_file, pwmscan_dir, output_dir="./", background=[0.25, 0.25, 0.25, 0.25],
+    p_value_thresh=0.05, rel_score_thresh=0.8, dummy_dir="/tmp/", threads=1):
+    """
+    """
 
-    # For each matrix ID, profile... #
-    for matrix_id, profile in profiles[i]:
-        # Initialize #
-        cutoff = None
-        dummy_bed = os.path.join(dummy_dir, "%s.bed" % matrix_id)
-        dummy_pwm = os.path.join(dummy_dir, "%s.pwm" % matrix_id)
-        dummy_tsv = os.path.join(dummy_dir, "%s.tsv" % matrix_id)
+    # Parallelize PWM scan #
+    pool = Pool(threads)
+    parallelize_pwm_scan = partial(pwm_scan, input_file, pwmscan_dir, output_dir, background,
+    p_value_thresh, rel_score_thresh, dummy_dir)
+    for _ in tqdm(pool.imap(parallelize_pwm_scan, iter(profiles)), desc="PWM scan", total=len(profiles)):
+        pass
+    pool.close()
+    pool.join()
 
-        # Add background #
-        background = options.background.split(",")
-        profile.background = {"A": float(background[0]), "C": float(background[1]), "G": float(background[2]), "T": float(background[3])}
-        # Add JASPAR pseudocounts #
-        profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
-        # Convert to PWMScan format #
-        for i in range(len(profile.pssm["A"])):
-            functions.write(dummy_pwm, "\t".join([str(int(profile.pssm[j][i] * 100)) for j in "ACGT"]))
-        # Calculate distribution of matrix scores #
-        try:
-            process = subprocess.check_output([os.path.join(os.path.abspath(options.pwmscan_dir), "matrix_prob"), dummy_pwm], stderr=subprocess.STDOUT)
-            for line in process.split("\n"):
-                m = re.search("(\S+)\s+(\S+)\s+(\S+)%", line)
-                if m:
-                    score = m.group(1)
-                    p_value = float(m.group(2))
-                    perc = float(m.group(3))
-                    functions.write(dummy_tsv, "%s\t%s\t%s" % (score, int(perc * 10), int(log(p_value) * 1000 / -10)))
-                    if p_value < options.p_value_thresh and perc >= options.rel_score_thresh * 100:
-                        cutoff = score
-        except: raise ValueError("Could not calculate distribution of matrix scores!")
-        # Scan DNA sequence for TFBS matches #
-        try:
-            bash_command = '''%s -m %s -c %s %s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | gzip > %s''' % (os.path.join(os.path.abspath(options.pwmscan_dir), "matrix_scan"), dummy_pwm, cutoff, os.path.abspath(options.input_file), dummy_tsv, profile.name, dummy_bed)
-            process = subprocess.call(bash_command, shell=True, stderr=subprocess.STDOUT)
-        except:
-            raise ValueError("Could not scan DNA sequence file for TFBS matches!")
-        # Write output #
-        output_file = os.path.join(os.path.abspath(options.output_dir), "%s.bed.gz" % matrix_id)
-        shutil.copy(dummy_bed, output_file)
-        # Remove files #
-        os.remove(dummy_bed)
-        os.remove(dummy_pwm)
-        os.remove(dummy_tsv)
+def pwm_scan(input_file, pwmscan_dir, output_dir="./", background=[0.25, 0.25, 0.25, 0.25],
+    p_value_thresh=0.05, rel_score_thresh=0.8, dummy_dir="/tmp/", profile=None):
+    """
+    """
+
+    # Initialize #
+    bed_file = os.path.join(dummy_dir, "%s.%s.%s.bed" % (os.path.basename(__file__), os.getpid(), profile.matrix_id))
+    pwm_file = os.path.join(dummy_dir, "%s.%s.%s.pwm" % (os.path.basename(__file__), os.getpid(), profile.matrix_id))
+    tsv_file = os.path.join(dummy_dir, "%s.%s.%s.tsv" % (os.path.basename(__file__), os.getpid(), profile.matrix_id))
+    output_file = os.path.join(output_dir, "%s.bed.gz" % profile.matrix_id)
+
+    # Add background #
+    profile.background = {"A": background[0], "C": background[1], "G": background[2], "T": background[3]}
+    # Add JASPAR pseudocounts #
+    profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
+    # Convert to PWMScan format #
+    for i in range(len(profile.pssm["A"])):
+        functions.write(pwm_file, "\t".join([str(int(profile.pssm[j][i] * 100)) for j in "ACGT"]))
+    # Calculate distribution of matrix scores #
+    try:
+        process = subprocess.check_output([os.path.join(pwmscan_dir, "matrix_prob"), pwm_file], stderr=subprocess.STDOUT)
+        for line in process.split("\n"):
+            m = re.search("(\S+)\s+(\S+)\s+(\S+)%", line)
+            if m:
+                score = m.group(1)
+                p_value = float(m.group(2))
+                perc = float(m.group(3))
+                functions.write(tsv_file, "%s\t%s\t%s" % (score, int(perc * 10), int(log(p_value) * 1000 / -10)))
+                if p_value < options.p_value_thresh and perc >= options.rel_score_thresh * 100:
+                    cutoff = score
+    except: raise ValueError("Could not calculate distribution of matrix scores!")
+    # Scan DNA sequence for TFBS matches #
+    try:
+        bash_command = '''%s -m %s -c %s %s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | gzip > %s''' % (os.path.join(pwmscan_dir, "matrix_scan"), pwm_file, cutoff, os.path.abspath(options.input_file), tsv_file, profile.name, bed_file)
+        process = subprocess.call(bash_command, shell=True, stderr=subprocess.STDOUT)
+    except:
+        raise ValueError("Could not scan DNA sequence file for TFBS matches!")
+    # Write output #
+    shutil.copy(bed_file, output_file)
+    # Remove files #
+    os.remove(bed_file)
+    os.remove(pwm_file)
+    os.remove(tsv_file)
 
 #-------------#
 # Main        #
 #-------------#
 
 if __name__ == "__main__":
-
-    # Globals #
-    global dummy_dir, options, profiles
 
     # Arguments & Options #
     options = parse_options()
@@ -129,10 +141,8 @@ if __name__ == "__main__":
 
     # Initialize #
     profiles = {}
-    dummy_dir = os.path.join(os.path.abspath(options.dummy_dir), "%s.%s" % (os.path.basename(__file__), os.getpid()))
-    if not os.path.exists(dummy_dir): os.makedirs(dummy_dir)
     taxons = ["fungi", "insects", "nematodes", "plants", "vertebrates"]
-    
+
     # For each taxon... #
     for taxon in taxons:
         # Skip if wrong taxon #
@@ -150,14 +160,12 @@ if __name__ == "__main__":
             profiles.setdefault(profile_file[:6], [])
             if options.latest:
                 if len(profiles[profile_file[:6]]) == 1: continue
-            profiles[profile_file[:6]].append((profile_file[:8], profile))
+            profiles[profile_file[:6]].append(profile)
 
-    # Parallelize PWM scan #
-    pool = Pool(options.threads)
-    for _ in tqdm(pool.imap(parallelize_pwm_scan, profiles.keys()), desc="PWM scan", total=len(profiles.keys())):
-        pass
-    pool.close()
-    pool.join()
+    # Create a list of profiles to scan #
+    profiles = list(chain.from_iterable(profiles.values()))
 
-    # Remove dummy dir #
-    shutil.rmtree(dummy_dir)
+    # Scan profiles #
+    scan_profiles(profiles, os.path.abspath(options.input_file), os.path.abspath(options.pwmscan_dir),
+        os.path.abspath(options.output_dir), map(float, options.background.split(",")), options.p_value_thresh,
+        options.rel_score_thresh, os.path.abspath(options.dummy_dir), options.threads)
