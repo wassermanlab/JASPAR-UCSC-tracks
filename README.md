@@ -23,22 +23,11 @@ Pre-calculated genome-wide TFBS predictions for human and various model organism
 ## Usage
 To illustrate the generation of the JASPAR genome tracks, we provide an example for [yeast](https://www.ncbi.nlm.nih.gov/assembly/GCF_000146045.2/):
 * Scan the yeast genome using all profiles from fungi
+For yeast, this step should not take longer than a minute. For human (and other genomes of similar size), this step be completed within a few hours (total time depends on the number of threads specified).
 `python scan_sequence.py --fasta-file ./genomes/sacCer3/sacCer3.fa --profiles-dir ./profiles/ --dummy-dir ./tmp/ --output-dir ./scans/sacCer3/ --threads 32 --latest --taxon fungi`
-* Create a BED file
-For each TF binding profile, the human DNA sequence (in FASTA format) was scanned using the jaspar_search.py script, and matches with a relative score ≥0.8 and with a p-value <0.05 were kept (i.e. TFBS predictions that were not consistent between the TFBS Perl module and FIMO were filtered out).
-
-./jaspar_search.py -f $GENOME_FASTA -j $JASPAR_MATRIX_ID -m $MEME_DIR -o $SCANS_DIR -p $PROFILES_DIR
-
-Create a sorted BED file
-TFBS predictions were converted to BED format. As scores (column 5), we used FIMO p-values (scaled between 0-1000, where 0 corresponds to p-value = 1 and 1000 to p-value ≤ 10-10) to allow for comparison of prediction confidence between different profiles.
-
-./fetch_binding_sites.py -i $SCANS_DIR -p $PROFILES_DIR | sort -k1,1 -k2,2n > $BED_FILE
-
-Create a UCSC Genome Browser bigBed track file
-Finally, BED files were converted to bigBed format for visualization in the UCSC Genome Browser using bedToBigBed, as distributed within the UCSC binaries for standalone command-line use.
-
-bedToBigBed -type=bed6 -tab -extraIndex=name $BED_FILE $CHROM_SIZES $BIGBED_FILE
-*
-*
+* Create a sorted BED file
+TFBS predictions from `scan_sequence.py` are converted to BED format using the script `scans2bed.sh`. As scores (column 5), we use p-values from PWMScan (scaled between 0-1000, where 0 corresponds to p-value = 1 and 1000 to p-value ≤ 10-10) to allow for comparison of prediction confidence between different profiles. Again, for yeast this step should finish in a few minutes, while for larger genomes it can take hours.
 `bash scans2bed.sh genomes/sacCer3/sacCer3.chrom.sizes scans/sacCer3/ > tracks/sacCer3/sacCer3.bed`
-
+* Create a bigBed track file
+Finally, BED files were converted to bigBed format for visualization in the UCSC Genome Browser using bedToBigBed, as distributed within the UCSC binaries for standalone command-line use. As in the previous steps, the time consumed by this step will increase with genome size.
+`bedToBigBed -type=bed6 -tab -extraIndex=name tracks/sacCer3/sacCer3.bed genomes/sacCer3/sacCer3.chrom.sizes tracks/sacCer3/sacCer3.bb`
