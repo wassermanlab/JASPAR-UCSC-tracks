@@ -17,5 +17,8 @@ The scripts for creating the JASPAR UCSC tracks require the following dependenci
 * [`Python 3.7`](https://www.python.org/download/releases/3.7/) with the [`Biopython`](http://biopython.org), [`NumPy`](http://www.numpy.org), [`pyfaidx`](https://peerj.com/preprints/970/) and [`tqdm`](https://tqdm.github.io) libraries
 * [`UCSC binaries`](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
+## TFBS prediction availability
+Pre-calculated genome-wide TFBS predictions for human and various model organisms are available through [`http://jaspar.genereg.net/genome-tracks/#ucsc_tracks`](http://jaspar.genereg.net/genome-tracks/#ucsc_tracks) and [`http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2018/`](http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2018/).
+
 ## Usage
 **TO BE UPDATED**
