@@ -1,0 +1,15 @@
+name: JASPAR
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - biopython=1.73
+  - git=2.20.1
+  - numpy=1.16.4
+  - pip=19.2.2
+  - pyfaidx=0.5.5.2
+  - python=3.7.3
+  - setuptools=41.0.1
+  - tqdm=4.35.0
+  - ucsc-bedtobigbed
