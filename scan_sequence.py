@@ -244,6 +244,7 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
     threads=1, A=0.25, C=0.25, G=0.25, T=0.25, pthresh=0.05, rthresh=0.8):
 
     # Initialize
+    cutoff = None
     dummy_file = os.path.join(dummy_dir, "%s.%s.%s" % (base_name, pid, profile.matrix_id))
     bed_file = "%s.bed" % dummy_file
     pwm_file = "%s.pwm" % dummy_file
@@ -282,7 +283,7 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
                 f.write("%s\t%s\t%s\n" % (score, int(perc * 10), int(log(p_value) * 1000 / -10)))
 
                 # Get PWM score cutoff
-                if p_value < pthresh and perc >= rthresh * 100:
+                if p_value < pthresh and perc >= rthresh * 100 or cutoff is None:
                     cutoff = score
 
     # Scan FASTA file
