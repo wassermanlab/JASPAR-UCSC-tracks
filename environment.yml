@@ -13,3 +13,4 @@ dependencies:
   - setuptools=41.0.1
   - tqdm=4.35.0
   - ucsc-bedtobigbed
+  - ucsc-twobittofa
