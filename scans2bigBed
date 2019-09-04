@@ -30,6 +30,7 @@ function help {
     echo "optional arguments:"
     echo "  -h, --help          show this help message and exit"
     echo "  -d DUMMY_DIR        dummy directory (default = /tmp/)"
+    echo "  -m MEM              memory to use (in Gb; default = 4)"
     echo "  -o OUT_FILE         output file (default = ./bigBed.bb)"
     echo "  -t THREADS          threads to use (default = 1)"
     echo "  -v, --version       version"
@@ -60,12 +61,13 @@ then
     exit
 fi
 
-while getopts ":c:i:d:o:t:vh" OPT
+while getopts ":c:i:d:m:o:t:vh" OPT
 do
     case $OPT in
     c) CHROM_SIZES=$OPTARG;;
 	i) INPUT_DIR=$OPTARG;;
 	d) DUMMY_DIR=$OPTARG;;
+	m) MEM=$OPTARG;;
 	o) OUT_FILE=$OPTARG;;
 	t) THREADS=$OPTARG;;
 	v) version ;;
@@ -91,7 +93,7 @@ zless $INPUT_DIR/*.tsv.gz | cut -f 1-4,6,7 | awk 'max=1000{if($5>max){$5=max}pri
 ##
 ## Sort BED file
 ##
-LC_ALL=C sort --parallel=$THREADS --buffer-size=4G -k1,1 -k2,2n $BED_FILE > $SORTED_BED_FILE
+LC_ALL=C sort --parallel=$THREADS --buffer-size=${MEM}G -k1,1 -k2,2n $BED_FILE > $SORTED_BED_FILE
 
 ##
 ## Create bigBed

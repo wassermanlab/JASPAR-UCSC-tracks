@@ -2,7 +2,7 @@
 **TO BE UPDATED**
 
 ## News
-01/07/2018 The JASPAR UCSC tracks module now uses [`PWMScan`](http://ccg.vital-it.ch/pwmscan), instead of [`MEME`](http://meme-suite.org/doc/overview.html) and the `Perl` [`TFBS`](http://tfbs.genereg.net) package, for speeding-up genome-wide TFBS predictions.
+01/07/2018 To speed-up TFBS predictions, we switched from [`MEME`](http://meme-suite.org/doc/overview.html) and the [`Perl TFBS`](http://tfbs.genereg.net) package, to [`PWMScan`](http://ccg.vital-it.ch/pwmscan).
 
 ## Content
 The repository is organized as follows:
@@ -18,7 +18,7 @@ The scripts for creating the JASPAR UCSC tracks require the following dependenci
 * [`PWMScan`](http://ccg.vital-it.ch/pwmscan)
 * [`UCSC binaries`](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
-## TFBS prediction availability
+## Availability
 Predictions for human and 6 other model organisms are available online:
 * [`http://jaspar.genereg.net/genome-tracks/#ucsc_tracks`](http://jaspar.genereg.net/genome-tracks/#ucsc_tracks)
 * [`http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2018/`](http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2018/).
@@ -30,10 +30,10 @@ We provide a [script](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/ma
 2) Scan the genome using [all fungi profiles from the JASPAR CORE](http://jaspar.genereg.net/search?q=&collection=CORE&tax_group=fungi)
 For yeast, this step should not take longer than a minute. For human (and other genomes of similar size), this step should be completed within a few hours (the total amount of time will depend on the number of `--threads` specified).
 ```
-./scan_sequence.py --fasta-file ./genomes/sacCer3/sacCer3.fa --profiles-dir ./profiles/ --output-dir ./scans/sacCer3/ --threads 16 --latest --taxon fungi
+./scan_sequence.py --fasta-file ./genomes/sacCer3/sacCer3.fa --profiles-dir ./profiles/ --output-dir ./tracks/sacCer3/ --threads 4 --latest --taxon fungi
 ```
 3) Create a [genome browser bigBed track](https://genome.ucsc.edu/goldenPath/help/bigBed.html)
 TFBS predictions from the Python script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py) are merged into a bigBed track file using the bash script [`scans2bigBed`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scans2bigBed). As scores (column 5), we use <i>p</i>-values from PWMScan (scaled between 0-1000, where 0 corresponds to <i>p</i>-value = 1 and 1000 to <i>p</i>-value ≤ 10-10) to allow for comparison of prediction confidence across TFBSs. Again, for yeast this step should finish within a few minutes, while for larger genomes it could take a few hours.
 ```
-./scans2bigBed -c ./genomes/sacCer3/sacCer3.chrom.sizes -i ./scans/sacCer3/ -o ./tracks/sacCer3.bed -t 16
+./scans2bigBed -c ./genomes/sacCer3/sacCer3.chrom.sizes -i ./tracks/sacCer3/ -o ./tracks/sacCer3.bb -t 4
 ```
