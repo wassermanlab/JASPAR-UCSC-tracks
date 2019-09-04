@@ -8,7 +8,7 @@
 ## terms of the GNU General Public License, Version 3, June 2007.
 
 ##
-## Create bigBed from individual TF scans
+## Create a genome browser bigBed track from individual TF scans
 ##
 
 ################### Initialize ###################
@@ -86,7 +86,7 @@ SORTED_BED_FILE=$DUMMY_DIR/tmp.sorted.bed
 ##
 ## Merge all TFBSs into an unsorted BED file
 ##
-zless $INPUT_DIR/*.tsv.gz | cut -f 1-4,6,7 > $BED_FILE
+zless $INPUT_DIR/*.tsv.gz | cut -f 1-4,6,7 | awk 'max=1000{if($5>max){$5=max}print "$1\t$2\t$3\t$4\t$5\t$6"}' > $BED_FILE
 
 ##
 ## Sort BED file

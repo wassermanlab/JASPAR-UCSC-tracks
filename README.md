@@ -35,5 +35,5 @@ For yeast, this step should not take longer than a minute. For human (and other 
 3) Create a [genome browser bigBed track](https://genome.ucsc.edu/goldenPath/help/bigBed.html)
 TFBS predictions from the Python script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py) are merged into a bigBed track file using the bash script [`scans2bigBed`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scans2bigBed). As scores (column 5), we use <i>p</i>-values from PWMScan (scaled between 0-1000, where 0 corresponds to <i>p</i>-value = 1 and 1000 to <i>p</i>-value ≤ 10-10) to allow for comparison of prediction confidence across TFBSs. Again, for yeast this step should finish within a few minutes, while for larger genomes it could take a few hours.
 ```
-./scans2bigBed genomes/sacCer3/sacCer3.chrom.sizes scans/sacCer3/ > tracks/sacCer3/sacCer3.bed
+./scans2bigBed -c ./genomes/sacCer3/sacCer3.chrom.sizes -i ./scans/sacCer3/ -o ./tracks/sacCer3.bed -t 16
 ```
