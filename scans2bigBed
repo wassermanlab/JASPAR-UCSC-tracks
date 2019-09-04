@@ -1,0 +1,104 @@
+
+#!/bin/bash
+## JASPAR-UCSC-tracks
+## Copyleft 2019 The JASPAR Consortium
+## Author: Oriol Fornes
+## Contact: oriol@cmmt.ubc.ca
+## This software is distributed without any guarantee under the
+## terms of the GNU General Public License, Version 3, June 2007.conda conda a
+
+##
+## Generate bigBed file from individual TF scans
+##
+
+################### Initialize ###################
+
+SOFT="scans2bigBed"
+VERSION="2.0.1"
+
+function usage {
+    echo -e "usage: $SOFT -c CHROM_SIZES -i INPUT_DIR [-h]"
+}
+
+function help {
+    echo 
+    usage;
+    echo 
+    echo "  -c CHROM_SIZES      chrom sizes file (e.g. from hg38.sh)"
+    echo "  -i INPUT_DIR        input directory (from scan_sequence.py)"
+    echo 
+    echo "optional arguments:"
+    echo "  -h, --help          show this help message and exit"
+    echo "  -d DUMMY_DIR        dummy directory (default = /tmp/)"
+    echo "  -o OUT_FILE         output file (default = ./bigBed.bb)"
+    echo "  -t THREADS          threads to use (default = 1)"
+    echo "  -v, --version       version"
+    echo 
+    exit;
+}
+
+function version {
+    echo -e "$SOFT version $VERSION"
+    exit
+}
+
+function opts_error {
+    echo -e "Error : invalid parameters !" >&2
+    echo -e "Use $SOFT -h for help"
+    exit
+}
+
+##################### Inputs #####################
+
+DUMMY_DIR=/tmp
+OUT_FILE=./bigBed.bb
+THREADS=1
+
+if [ $# -lt 1 ]
+then
+    usage
+    exit
+fi
+
+while getopts ":c:i:d:o:t:vh" OPT
+do
+    case $OPT in
+    c) CHROM_SIZES=$OPTARG;;
+	i) INPUT_DIR=$OPTARG;;
+	d) DUMMY_DIR=$OPTARG;;
+	o) OUT_FILE=$OPTARG;;
+	t) THREADS=$OPTARG;;
+	v) version ;;
+	h) help ;;
+    esac
+done
+
+if [[ -z CHROM_SIZES || -z $INPUT_DIR ]]; then
+    usage
+    exit
+fi
+
+###################### Work ######################
+
+BED_FILE=$DUMMY_DIR/tmp.bed
+SORTED_BED_FILE=$DUMMY_DIR/tmp.sorted.bed
+
+##
+## Merge all TFBSs into an unsorted BED file
+##
+echo "zless $INPUT_DIR/*.bed.gz | cut -f 1-4,6,7 > $BED_FILE"
+
+##
+## Sort BED file
+##
+echo "LC_ALL=C sort --parallel=$THREADS --buffer-size=4G -k1,1 -k2,2n $BED_FILE > $SORTED_BED_FILE"
+
+##
+## Create bigBed
+##
+echo "bedToBigBed -type=bed6 -tab -extraIndex=name $SORTED_BED_FILE $CHROM_SIZES $OUT_FILE"
+
+##
+## Remove dummy files
+##
+rm $BED_FILE $SORTED_BED_FILE

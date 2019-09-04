@@ -14,11 +14,10 @@ from tqdm import tqdm
 
 # Authorship
 __author__ = "Oriol Fornes"
-__credits__ = []
 __organization__ = "The JASPAR Consortium"
-__copyright__ = "Copyright 2018"
-__license__ = "LGPL"
-__version__ = "2.1.0"
+__copyright__ = "Copyleft 2019"
+__license__ = "GPL"
+__version__ = "2.0.1"
 __maintainer__ = "Oriol Fornes"
 __email__ = "oriol@cmmt.ubc.ca"
 __status__ = "Production"
