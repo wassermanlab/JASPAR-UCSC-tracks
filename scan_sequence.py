@@ -147,26 +147,6 @@ def main():
     # Parse arguments
     args = parse_args()
 
-#   --fasta-file FILE   one or more sequences in FASTA format
-#   --profiles-dir DIR  output directory from get_profiles.py
-
-# optional arguments:
-#   -h, --help          show this help message and exit
-#   --dummy-dir DIR     dummy directory (default = /tmp/)
-#   --output-dir DIR    output directory (default = ./)
-#   --threads INT       threads to use (default = 1)
-
-# search arguments:
-#   -A FLOAT            background freq for A (default = 0.25)
-#   -C FLOAT            background freq for C (default = 0.25)
-#   -G FLOAT            background freq for G (default = 0.25)
-#   -T FLOAT            background freq for T (default = 0.25)
-#   -l, --latest        use the latest version of each profile
-#   --profile [STR ...] profile ID(s) to use (default = all)
-#   --pthresh FLOAT     p-value threshold (default = 0.05)
-#   --rthresh FLOAT     relative score threshold (default = 0.8)
-#   --taxon [STR ...]   taxon(s) to use (default = all)
-
     # Scan sequence
     scan_sequence(args.fasta_file, args.profiles_dir, args.dummy_dir,
         args.output_dir, args.threads, args.A, args.C, args.G, args.T,
@@ -175,6 +155,10 @@ def main():
 def scan_sequence(fasta_file, profiles_dir, dummy_dir="/tmp/", output_dir="./",
     threads=1, A=0.25, C=0.25, G=0.25, T=0.25, latest=False, profile=[], 
     pthresh=0.05, rthresh=0.8, taxon=taxons):
+
+    # Create output directory
+    if not os.path.exists(os.path.abspath(output_dir)):
+        os.makedirs(os.path.abspath(output_dir))
 
     # Get profiles to scan
     profiles = _get_profiles(profiles_dir, latest, profile, taxon)
