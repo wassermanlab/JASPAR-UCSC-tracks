@@ -234,7 +234,7 @@ def _scan_profiles(profiles, fasta_file, dummy_dir="/tmp/", output_dir="./",
     parallelized = partial(_scan_profile, fasta_file=fasta_file,
         dummy_dir=dummy_dir, output_dir=output_dir, threads=threads, A=A, C=C,
         G=G, T=T, pthresh=pthresh, rthresh=rthresh)
-    for _ in tqdm(pool.imap(parallelized, profiles), desc="scan sequence", total=len(profiles)):
+    for _ in tqdm(pool.imap(parallelized, profiles), total=len(profiles)):
         pass
     pool.close()
     pool.join()
@@ -245,10 +245,9 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
     # Initialize
     cutoff = None
     dummy_file = os.path.join(dummy_dir, "%s.%s.%s" % (base_name, pid, profile.matrix_id))
-    bed_file = "%s.bed" % dummy_file
     pwm_file = "%s.pwm" % dummy_file
     tsv_file = "%s.tsv" % dummy_file
-    output_file = os.path.join(output_dir, "%s.bed.gz" % profile.matrix_id)
+    gzipped_file = "%s.gz" % tsv_file
 
     # Add background
     profile.background = {"A": A, "C": C, "G": G, "T": T}
@@ -287,17 +286,17 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
 
     # Scan FASTA file
     cmd_1 = "matrix_scan -m %s -c %s %s" % (pwm_file, cutoff, fasta_file)
-    cmd_2 = "gzip > %s" % bed_file
+    cmd_2 = "gzip > %s" % gzipped_file
     cmd = '''%s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | %s''' % (cmd_1, tsv_file, profile.name, cmd_2)
     subprocess.call(cmd, shell=True, stderr=subprocess.STDOUT)
 
     # Write output
-    shutil.copy(bed_file, output_file)
+    shutil.copy(gzipped_file, os.path.join(output_dir, "%s.tsv.gz" % profile.matrix_id))
 
     # Remove dummy files
-    os.remove(bed_file)
     os.remove(pwm_file)
     os.remove(tsv_file)
+    os.remove(gzipped_file)
 
 #-------------#
 # Main        #
