@@ -24,7 +24,7 @@ def main():
     # Parse arguments
     args = parse_args()
 
-    # Make files
+    # Get profiles
     get_profiles(args.devel, args.o)
 
 def get_profiles(devel=False, output_dir="./"):
