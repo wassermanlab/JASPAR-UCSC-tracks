@@ -1,0 +1,120 @@
+#!/bin/bash
+
+## JASPAR-UCSC-tracks
+## Copyleft 2019 The JASPAR Consortium
+## Author: Oriol Fornes
+## Contact: oriol@cmmt.ubc.ca
+## This software is distributed without any guarantee under the
+## terms of the GNU General Public License, Version 3, June 2007.
+
+##
+## Create a genome browser bigBed track from individual TF scans
+##
+
+################### Initialize ###################
+
+SOFT="scans2bigBed"
+VERSION="2.0.1"
+
+function usage {
+    echo -e "usage: $SOFT -c CHROM_SIZES -i INPUT_DIR [-h]"
+}
+
+function help {
+    echo 
+    usage;
+    echo 
+    echo "  -c CHROM_SIZES      chrom sizes file (e.g. from hg38.sh)"
+    echo "  -i INPUT_DIR        input directory (from scan_sequence.py)"
+    echo 
+    echo "optional arguments:"
+    echo "  -h, --help          show this help message and exit"
+    echo "  -d DUMMY_DIR        dummy directory (default = /tmp/)"
+    echo "  -m MEM              memory to use (in Gb; default = 4)"
+    echo "  -o OUT_FILE         output file (default = ./bigBed.bb)"
+    echo "  -t THREADS          threads to use (default = 1)"
+    echo "  -v, --version       version"
+    echo 
+    exit;
+}
+
+function version {
+    echo -e "$SOFT version $VERSION"
+    exit
+}
+
+function opts_error {
+    echo -e "Error : invalid parameters !" >&2
+    echo -e "Use $SOFT -h for help"
+    exit
+}
+
+##################### Inputs #####################
+
+DUMMY_DIR=/tmp
+OUT_FILE=./bigBed.bb
+THREADS=1
+
+if [ $# -lt 1 ]
+then
+    usage
+    exit
+fi
+
+while getopts ":c:i:d:m:o:t:vh" OPT
+do
+    case $OPT in
+	c) CHROM_SIZES=$OPTARG;;
+	i) INPUT_DIR=$OPTARG;;
+	d) DUMMY_DIR=$OPTARG;;
+	m) MEM=$OPTARG;;
+	o) OUT_FILE=$OPTARG;;
+	t) THREADS=$OPTARG;;
+	v) version ;;
+	h) help ;;
+    esac
+done
+
+if [[ -z CHROM_SIZES || -z $INPUT_DIR ]]; then
+    usage
+    exit
+fi
+
+###################### Work ######################
+
+
+##
+## Extract genome assembly
+##
+GENOME=$(perl -ne 'if($ARGV=~/(\w+).chrom.sizes/){print $1;exit;}' $CHROM_SIZES)
+
+##
+## Initialize
+##
+BED_FILE=$DUMMY_DIR/$GENOME.bed
+SORTED_BED_FILE=$DUMMY_DIR/$GENOME.sorted.bed
+
+##
+## Merge all TFBSs into an unsorted BED file
+##
+zless $INPUT_DIR/*.tsv.gz | cut -f 1-4,6,7 | awk 'max=1000{if($5>max){$5=max}print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' > $BED_FILE
+
+##
+## Sort BED file
+##
+LC_ALL=C sort --parallel=$THREADS --buffer-size=${MEM}G -k1,1 -k2,2n $BED_FILE > $SORTED_BED_FILE
+
+##
+## Remove BED file
+##
+rm $BED_FILE
+
+##
+## Create bigBed
+##
+bedToBigBed -type=bed6 -tab $SORTED_BED_FILE $CHROM_SIZES $OUT_FILE
+
+##
+## Remove sorted BED file
+##
+rm $SORTED_BED_FILE
