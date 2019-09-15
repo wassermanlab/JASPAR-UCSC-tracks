@@ -112,9 +112,9 @@ rm $BED_FILE
 ##
 ## Create bigBed
 ##
-bedToBigBed -type=bed6 -tab -extraIndex=name $SORTED_BED_FILE $CHROM_SIZES $OUT_FILE
+bedToBigBed -type=bed6 -tab $SORTED_BED_FILE $CHROM_SIZES $OUT_FILE
 
 ##
 ## Remove sorted BED file
 ##
-#rm $SORTED_BED_FILE
+rm $SORTED_BED_FILE

@@ -1,4 +1,4 @@
-name: JASPAR
+name: JASPAR-UCSC-tracks
 channels:
   - conda-forge
   - bioconda
