@@ -1,5 +1,4 @@
 # JASPAR UCSC tracks
-**TO BE UPDATED**
 
 ## News
 01/07/2018 To speed-up TFBS predictions, we switched from [`MEME`](http://meme-suite.org/doc/overview.html) and the [`Perl TFBS`](http://tfbs.genereg.net) package, to [`PWMScan`](http://ccg.vital-it.ch/pwmscan).
@@ -37,3 +36,4 @@ TFBS predictions from the Python script [`scan_sequence.py`](https://github.com/
 ```
 ./scans2bigBed -c ./genomes/sacCer3/sacCer3.chrom.sizes -i ./tracks/sacCer3/ -o ./tracks/sacCer3.bb -t 4
 ```
+**Important note:** both disk space and memory requirements for vertebrate assemblies (*i.e.* danRer11, hg19, hg38 and mm10) are substantial. We recommend allocating at least 1Tb of disk space and 512Gb of ram each time.
