@@ -15,8 +15,6 @@ from tqdm import tqdm
 # Authorship
 __author__ = "Oriol Fornes"
 __organization__ = "The JASPAR Consortium"
-__copyright__ = "Copyleft 2019"
-__license__ = "GPL"
 __version__ = "2.0.1"
 __maintainer__ = "Oriol Fornes"
 __email__ = "oriol@cmmt.ubc.ca"
