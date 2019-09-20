@@ -1,11 +1,8 @@
 #!/bin/bash
 
 ## JASPAR-UCSC-tracks
-## Copyleft 2019 The JASPAR Consortium
 ## Author: Oriol Fornes
 ## Contact: oriol@cmmt.ubc.ca
-## This software is distributed without any guarantee under the
-## terms of the GNU General Public License, Version 3, June 2007.
 
 ##
 ## Create a genome browser bigBed track from individual TF scans
