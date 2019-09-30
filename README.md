@@ -17,7 +17,7 @@ The original scripts used for the publication of [`JASPAR 2018`](https://doi.org
 ## Dependencies
 The scripts for creating the genomic tracks require the following dependencies:
 * [`GNU parallel`](https://www.gnu.org/software/parallel/)
-* [`Python 3.7`](https://www.python.org/download/releases/3.7/) with the [`Biopython`](http://biopython.org), [`NumPy`](http://www.numpy.org), [`pyfaidx`](https://peerj.com/preprints/970/) and [`tqdm`](https://tqdm.github.io) libraries
+* [`Python 3.7`](https://www.python.org/download/releases/3.7/) with the [`Biopython`](http://biopython.org) (<1.74), [`NumPy`](http://www.numpy.org), [`pyfaidx`](https://peerj.com/preprints/970/) and [`tqdm`](https://tqdm.github.io) libraries
 * [`PWMScan`](http://ccg.vital-it.ch/pwmscan)
 * [`UCSC binaries`](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
