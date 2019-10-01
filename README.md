@@ -6,13 +6,13 @@ This repository contains the data and code used to generate the JASPAR UCSC Geno
 
 ## Content
 The repository is organized as follows:
-* The `genomes` folder contains scripts to download and process different genome assemblies
-* The `profiles` folder contains the output from the script [`get_profiles.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/profiles/get_profiles.py), which downloads JASPAR CORE profiles for different taxons
+* The folder `genomes` contains scripts to download and process different genome assemblies
+* The folder `profiles` contains the output from the script [`get_profiles.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/profiles/get_profiles.py), which downloads JASPAR CORE profiles for different taxons
 * The script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py) takes as input the `profiles` folder and a nucleotide sequence, in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format) (*e.g.* a genome), and provides TFBS predictions
 * The script [`scans2bigBed`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scans2bigBed) creates a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html) from TFBS predictions
 * The file [`environment.yml`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/environment.yml) contains the conda environment used to generate the genomic tracks for JASPAR 2020 (it installs most of the dependencies described below)
 
-The original scripts used for the publication of [`JASPAR 2018`](https://doi.org/10.1093/nar/gkx1126) have been placed in the [`version-1.0`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/tree/master/version-1.0) folder.
+The original scripts used for the publication of [`JASPAR 2018`](https://doi.org/10.1093/nar/gkx1126) have been placed in the folder [`version-1.0`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/tree/master/version-1.0).
 
 ## Dependencies
 The scripts for creating the genomic tracks require the following dependencies:
@@ -21,7 +21,7 @@ The scripts for creating the genomic tracks require the following dependencies:
 * [`PWMScan`](http://ccg.vital-it.ch/pwmscan)
 * [`UCSC binaries`](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
-Note that for `scan_sequence.py`, only the `Python` dependencies and `PWMScan` are required.
+Note that for running `scan_sequence.py`, only the `Python` dependencies and `PWMScan` are required.
 
 ## Installation
 Except for `PWMScan`, which has to be [downloaded](https://sourceforge.net/projects/pwmscan/), installed, and appended to your `PATH`, the remaining dependencies can be installed through the [`conda`](https://docs.conda.io/en/latest/) package manager:
@@ -42,7 +42,7 @@ For this example, this step should not take longer than a minute. For human (and
 ./scan_sequence.py --fasta-file ./genomes/sacCer3/sacCer3.fa --profiles-dir ./profiles/ --output-dir ./tracks/sacCer3/ --threads 4 --latest --taxon fungi
 ```
 3) Create the genomic track
-TFBS predictions from the previous step are merged into a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html). As scores (column 5), we use <i>p</i>-values from PWMScan (scaled between 0-1000, where 0 corresponds to <i>p</i>-value = 1 and 1000 to <i>p</i>-value ≤ 10-10). This allows for comparison of prediction confidence across TFBSs. Again, for this example, this step should be completed within a few minutes, while for larger genomes it can take a few hours.
+TFBS predictions from the previous step are merged into a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html). As scores (column 5), we use <i>p</i>-values from `PWMScan` (scaled between 0-1000, where 0 corresponds to <i>p</i>-value = 1 and 1000 to <i>p</i>-value ≤ 10-10). This allows for comparison of prediction confidence across TFBSs. Again, for this example, this step should be completed within a few minutes, while for larger genomes it can take a few hours.
 ```
 ./scans2bigBed -c ./genomes/sacCer3/sacCer3.chrom.sizes -i ./tracks/sacCer3/ -o ./tracks/sacCer3.bb -t 4
 ```
