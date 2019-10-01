@@ -37,13 +37,14 @@ Genomic tracks and TFBS predictions for human and 6 other model organisms are av
 To illustrate the generation of genomic tracks, we provide an example for the [baker's yeast genome](https://www.ncbi.nlm.nih.gov/assembly/GCF_000146045.2/):
 1) Download the genome sequence and chromosome sizes (automated in this [script](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/genomes/sacCer3/sacCer3.sh))
 2) Scan the genome sequence using **all** [fungi profiles from the JASPAR CORE](http://jaspar.genereg.net/search?q=&collection=CORE&tax_group=fungi)
-For this example, this step should not take longer than a minute. For human (and for other similar genomes), this step should be completed within a few hours (the final amount of time will depend on the number of `--threads` specified).
 ```
 ./scan_sequence.py --fasta-file ./genomes/sacCer3/sacCer3.fa --profiles-dir ./profiles/ --output-dir ./tracks/sacCer3/ --threads 4 --latest --taxon fungi
 ```
+For this example, this step should not take longer than a minute. For human (and for other similar genomes), this step should be completed within a few hours (the final amount of time will depend on the number of `--threads` specified).
 3) Create the genomic track
-TFBS predictions from the previous step are merged into a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html). As scores (column 5), we use <i>p</i>-values from `PWMScan` (scaled between 0-1000, where 0 corresponds to <i>p</i>-value = 1 and 1000 to <i>p</i>-value ≤ 10-10). This allows for comparison of prediction confidence across TFBSs. Again, for this example, this step should be completed within a few minutes, while for larger genomes it can take a few hours.
 ```
 ./scans2bigBed -c ./genomes/sacCer3/sacCer3.chrom.sizes -i ./tracks/sacCer3/ -o ./tracks/sacCer3.bb -t 4
 ```
+TFBS predictions from the previous step are merged into a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html). As scores (column 5), we use <i>p</i>-values from `PWMScan` (scaled between 0-1000, where 0 corresponds to <i>p</i>-value = 1 and 1000 to <i>p</i>-value ≤ 10-10). This allows for comparison of prediction confidence across TFBSs. Again, for this example, this step should be completed within a few minutes, while for larger genomes it can take a few hours.
+
 **Important note:** both disk space and memory requirements for larger genomes (*i.e.* danRer11, hg19, hg38 and mm10) are substantial. In these cases, we highly recommend allocating at least 1Tb of disk space and 512Gb of ram.
