@@ -31,7 +31,7 @@ conda env create -f ./environment.yml
 
 ## Availability
 Genomic tracks and TFBS predictions for human and 6 other model organisms are available online:
-* [`http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2020/`](http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2020/).
+* [`http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2020/`](http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2020/)
 
 ## Usage
 To illustrate the generation of genomic tracks, we provide an example for the [baker's yeast genome](https://www.ncbi.nlm.nih.gov/assembly/GCF_000146045.2/):
