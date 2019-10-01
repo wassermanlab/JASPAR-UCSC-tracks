@@ -21,6 +21,14 @@ The scripts for creating the genomic tracks require the following dependencies:
 * [`PWMScan`](http://ccg.vital-it.ch/pwmscan)
 * [`UCSC binaries`](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
+Note that for `scan_sequence.py`, only the `Python` dependencies and `PWMScan` are required.
+
+## Installation
+Except for `PWMScan`, which has to be [downloaded](https://sourceforge.net/projects/pwmscan/), installed, and appended to your `PATH`, the remaining dependencies can be installed through the [`conda`](https://docs.conda.io/en/latest/) package manager:
+```
+conda env create -f ./environment.yml
+```
+
 ## Availability
 Genomic tracks and TFBS predictions for human and 6 other model organisms are available online:
 * [`http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2020/`](http://expdata.cmmt.ubc.ca/JASPAR/downloads/UCSC_tracks/2020/).
