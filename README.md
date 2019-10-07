@@ -24,7 +24,7 @@ The scripts for creating the genomic tracks require the following dependencies:
 Note that for running `scan_sequence.py`, only the `Python` dependencies and `PWMScan` are required.
 
 ## Installation
-Except for `PWMScan`, which has to be [downloaded](https://sourceforge.net/projects/pwmscan/), installed, and appended to your `PATH`, the remaining dependencies can be installed through the [`conda`](https://docs.conda.io/en/latest/) package manager:
+Except for `PWMScan`, which has to be [downloaded](https://sourceforge.net/projects/pwmscan/), installed, and appended to your `PATH` manually, the remaining dependencies can be installed through the [`conda`](https://docs.conda.io/en/latest/) package manager:
 ```
 conda env create -f ./environment.yml
 ```
