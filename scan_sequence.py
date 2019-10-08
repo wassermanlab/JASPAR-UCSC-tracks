@@ -230,55 +230,60 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
     pwm_file = "%s.pwm" % dummy_file
     tsv_file = "%s.tsv" % dummy_file
     gzipped_file = "%s.gz" % tsv_file
+    output_file = os.path.join(output_dir, "%s.tsv.gz" % profile.matrix_id)
 
-    # Add background
-    profile.background = {"A": A, "C": C, "G": G, "T": T}
+    # Skip if profile already scanned (i.e. for speed)
+    output_file = os.path.join(output_dir, "%s.tsv.gz" % profile.matrix_id)
+    if not os.path.exists(output_file):
 
-    # Add JASPAR pseudocounts
-    profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
+        # Add background
+        profile.background = {"A": A, "C": C, "G": G, "T": T}
 
-    # Write profile in PWMScan format
-    with open(pwm_file, "w") as f:
+        # Add JASPAR pseudocounts
+        profile.pseudocounts = motifs.jaspar.calculate_pseudocounts(profile)
 
-        for i in range(len(profile.pssm["A"])):
+        # Write profile in PWMScan format
+        with open(pwm_file, "w") as f:
 
-            f.write("%s\n" % "\t".join([str(int(profile.pssm[j][i]*100)) for j in "ACGT"]))
+            for i in range(len(profile.pssm["A"])):
 
-    # Calculate distribution of PWM scores
-    cmd = "matrix_prob %s" % pwm_file
-    process = subprocess.run([cmd], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                f.write("%s\n" % "\t".join([str(int(profile.pssm[j][i]*100)) for j in "ACGT"]))
 
-    with open(tsv_file, "w") as f:
+        # Calculate distribution of PWM scores
+        cmd = "matrix_prob %s" % pwm_file
+        process = subprocess.run([cmd], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        for line in process.stdout.decode("utf-8").split("\n"):
+        with open(tsv_file, "w") as f:
 
-            matches = re.findall("(\S+)", line)
+            for line in process.stdout.decode("utf-8").split("\n"):
 
-            if len(matches) == 3:
+                matches = re.findall("(\S+)", line)
 
-                score = matches[0]
-                p_value = float(matches[1])
-                perc = float(matches[2][:-1])
+                if len(matches) == 3:
 
-                f.write("%s\t%s\t%s\n" % (score, int(perc * 10), int(log(p_value) * 1000 / -10)))
+                    score = matches[0]
+                    p_value = float(matches[1])
+                    perc = float(matches[2][:-1])
 
-                # Get PWM score cutoff
-                if p_value < pthresh and perc >= rthresh * 100 or cutoff is None:
-                    cutoff = score
+                    f.write("%s\t%s\t%s\n" % (score, int(perc * 10), int(log(p_value) * 1000 / -10)))
 
-    # Scan FASTA file
-    cmd_1 = "matrix_scan -m %s -c %s %s" % (pwm_file, cutoff, fasta_file)
-    cmd_2 = "gzip > %s" % gzipped_file
-    cmd = '''%s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | %s''' % (cmd_1, tsv_file, profile.name, cmd_2)
-    subprocess.call(cmd, shell=True, stderr=subprocess.STDOUT)
+                    # Get PWM score cutoff
+                    if p_value < pthresh and perc >= rthresh * 100 or cutoff is None:
+                        cutoff = score
 
-    # Write output
-    shutil.copy(gzipped_file, os.path.join(output_dir, "%s.tsv.gz" % profile.matrix_id))
+        # Scan FASTA file
+        cmd_1 = "matrix_scan -m %s -c %s %s" % (pwm_file, cutoff, fasta_file)
+        cmd_2 = "gzip > %s" % gzipped_file
+        cmd = '''%s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | %s''' % (cmd_1, tsv_file, profile.name, cmd_2)
+        subprocess.call(cmd, shell=True, stderr=subprocess.STDOUT)
 
-    # Remove dummy files
-    os.remove(pwm_file)
-    os.remove(tsv_file)
-    os.remove(gzipped_file)
+        # Write output
+        shutil.copy(gzipped_file, output_file)
+
+        # Remove dummy files
+        os.remove(pwm_file)
+        os.remove(tsv_file)
+        os.remove(gzipped_file)
 
 #-------------#
 # Main        #
