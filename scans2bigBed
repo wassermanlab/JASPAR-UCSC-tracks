@@ -99,7 +99,7 @@ zless $INPUT_DIR/*.tsv.gz | cut -f 1-4,6,7 | awk 'max=1000{if($5>max){$5=max}pri
 ##
 ## Sort BED file
 ##
-LC_ALL=C sort --parallel=$THREADS --buffer-size=${MEM}G -k1,1 -k2,2n $BED_FILE > $SORTED_BED_FILE
+LC_ALL=C sort --parallel=$THREADS --buffer-size=${MEM}G -T $DUMMY_DIR -k1,1 -k2,2n $BED_FILE > $SORTED_BED_FILE
 
 ##
 ## Remove BED file
