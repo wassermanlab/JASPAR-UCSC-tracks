@@ -7,7 +7,6 @@ For more information visit the [JASPAR website](http://jaspar.genereg.net/genome
 01/07/2018 To speed-up TFBS predictions, we switched from [MEME](http://meme-suite.org/doc/overview.html) and the [Perl TFBS](http://tfbs.genereg.net) package to [PWMScan](http://ccg.vital-it.ch/pwmscan).
 
 ## Content
-The repository is organized as follows:
 * The folder `genomes` contains scripts to download and process different genome assemblies
 * The folder `profiles` contains the output from the script [`get_profiles.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/profiles/get_profiles.py), which downloads JASPAR CORE profiles for different taxons
 * The script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py) takes as input the `profiles` folder and a nucleotide sequence, in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format) (*e.g.* a genome), and provides TFBS predictions
@@ -17,7 +16,6 @@ The repository is organized as follows:
 The original scripts used for the publication of [JASPAR 2018](https://doi.org/10.1093/nar/gkx1126) have been placed in the folder [`version-1.0`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/tree/master/version-1.0).
 
 ## Dependencies
-The scripts for creating the genomic tracks require the following dependencies:
 * [GNU parallel](https://www.gnu.org/software/parallel/)
 * [Python 3.7](https://www.python.org/download/releases/3.7/) with the [Biopython](http://biopython.org) (<1.74), [NumPy](http://www.numpy.org), [pyfaidx](https://peerj.com/preprints/970/) and [tqdm](https://tqdm.github.io) libraries
 * [PWMScan](http://ccg.vital-it.ch/pwmscan)
