@@ -1,5 +1,6 @@
 # JASPAR UCSC tracks
 This repository contains the data and code used to generate the JASPAR UCSC Genome Browser track data hub.
+</br>
 For more information visit the [JASPAR website](http://jaspar.genereg.net/genome-tracks/#ucsc_tracks).
 
 ## News
