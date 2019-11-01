@@ -4,7 +4,7 @@ This repository contains the data and code used to generate the JASPAR UCSC Geno
 For more information visit the [JASPAR website](http://jaspar.genereg.net/genome-tracks/#ucsc_tracks).
 
 ## News
-01/07/2018 To speed-up TFBS predictions, we switched from [`MEME`](http://meme-suite.org/doc/overview.html) and the [`Perl TFBS`](http://tfbs.genereg.net) package to [`PWMScan`](http://ccg.vital-it.ch/pwmscan).
+01/07/2018 To speed-up TFBS predictions, we switched from [MEME](http://meme-suite.org/doc/overview.html) and the [Perl TFBS](http://tfbs.genereg.net) package to [PWMScan](http://ccg.vital-it.ch/pwmscan).
 
 ## Content
 The repository is organized as follows:
@@ -14,19 +14,19 @@ The repository is organized as follows:
 * The script [`scans2bigBed`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scans2bigBed) creates a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html) from TFBS predictions
 * The file [`environment.yml`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/environment.yml) contains the conda environment used to generate the genomic tracks for JASPAR 2020 (it installs most of the dependencies described below)
 
-The original scripts used for the publication of [`JASPAR 2018`](https://doi.org/10.1093/nar/gkx1126) have been placed in the folder [`version-1.0`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/tree/master/version-1.0).
+The original scripts used for the publication of [JASPAR 2018](https://doi.org/10.1093/nar/gkx1126) have been placed in the folder [`version-1.0`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/tree/master/version-1.0).
 
 ## Dependencies
 The scripts for creating the genomic tracks require the following dependencies:
-* [`GNU parallel`](https://www.gnu.org/software/parallel/)
-* [`Python 3.7`](https://www.python.org/download/releases/3.7/) with the [`Biopython`](http://biopython.org) (<1.74), [`NumPy`](http://www.numpy.org), [`pyfaidx`](https://peerj.com/preprints/970/) and [`tqdm`](https://tqdm.github.io) libraries
-* [`PWMScan`](http://ccg.vital-it.ch/pwmscan)
-* [`UCSC binaries`](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
+* [GNU parallel](https://www.gnu.org/software/parallel/)
+* [Python 3.7](https://www.python.org/download/releases/3.7/) with the [Biopython](http://biopython.org) (<1.74), [NumPy](http://www.numpy.org), [pyfaidx](https://peerj.com/preprints/970/) and [tqdm](https://tqdm.github.io) libraries
+* [PWMScan](http://ccg.vital-it.ch/pwmscan)
+* [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
-Note that for running `scan_sequence.py`, only the `Python` dependencies and `PWMScan` are required.
+Note that for running `scan_sequence.py`, only the Python dependencies and PWMScan are required.
 
 ## Installation
-Except for `PWMScan`, which has to be [downloaded](https://sourceforge.net/projects/pwmscan/), installed, and appended to your `PATH` manually, the remaining dependencies can be installed through the [`conda`](https://docs.conda.io/en/latest/) package manager:
+Except for PWMScan, which has to be [downloaded](https://sourceforge.net/projects/pwmscan/), installed, and appended to your `PATH` manually, the remaining dependencies can be installed through the [conda](https://docs.conda.io/en/latest/) package manager:
 ```
 conda env create -f ./environment.yml
 ```
