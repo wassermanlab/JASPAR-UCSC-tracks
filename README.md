@@ -11,7 +11,7 @@ For more information visit the [JASPAR website](http://jaspar.genereg.net/genome
 * The folder `profiles` contains the output from the script [`get_profiles.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/profiles/get_profiles.py), which downloads JASPAR CORE profiles for different taxons
 * The script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py) takes as input the `profiles` folder and a nucleotide sequence, in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format) (*e.g.* a genome), and provides TFBS predictions
 * The script [`scans2bigBed`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scans2bigBed) creates a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html) from TFBS predictions
-* The file [`environment.yml`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/environment.yml) contains the [conda](https://docs.conda.io/en/latest/) environment used to generate the genomic tracks for JASPAR 2020 (it installs most of the dependencies described below)
+* The file [`environment.yml`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/environment.yml) contains the conda environment (see Installation) used to generate the genomic tracks for JASPAR 2020
 
 The original scripts used for the publication of [JASPAR 2018](https://doi.org/10.1093/nar/gkx1126) have been placed in the folder [`version-1.0`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/tree/master/version-1.0).
 
