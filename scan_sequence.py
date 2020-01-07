@@ -131,6 +131,22 @@ def check_args(args):
             print(": ".join(error))
             exit(0)
 
+    # Check "--pthresh" argument
+    try:
+        args.pthresh = float(args.pthresh)
+    except:
+        error = ["%s\n%s" % (usage_msg, os.path.basename(__file__)), "error", "argument \"--pthresh\"", "invalid value", "\"%s\"\n" % args.pthresh]
+        print(": ".join(error))
+        exit(0)
+
+    # Check "--rthresh" argument
+    try:
+        args.rthresh = float(args.rthresh)
+    except:
+        error = ["%s\n%s" % (usage_msg, os.path.basename(__file__)), "error", "argument \"--rthresh\"", "invalid value", "\"%s\"\n" % args.rthresh]
+        print(": ".join(error))
+        exit(0)
+
     # Check "--taxon" argument
     for taxon in args.taxon:
         if taxon not in taxons:
