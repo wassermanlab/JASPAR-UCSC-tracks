@@ -98,7 +98,7 @@ def get_profiles(devel=False, output_dir="./"):
                     jaspar_profile = "%s.jaspar" % m.group(1).replace("_", ".")
 
                     # Create symbolic links
-                    os.symlink(os.path.join(taxon_dir, jaspar_profile), jaspar_profile)
+                    os.symlink(os.path.join("..", taxon, jaspar_profile), jaspar_profile)
 
             # Remove central profiles
             os.remove("%s" % central_profiles)
