@@ -5,6 +5,7 @@ This repository contains the data and code used to generate the JASPAR UCSC Geno
 01/07/2018 To speed-up TFBS predictions, we switched from [MEME](http://meme-suite.org/doc/overview.html) and the [Perl TFBS](http://tfbs.genereg.net) package to [PWMScan](http://ccg.vital-it.ch/pwmscan).
 
 ## Content
+* The `bin` folder contains binaries required by the script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py)
 * The `genomes` folder contains scripts to download and process different genome assemblies
 * The `profiles` folder contains the output from the script [`get_profiles.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/profiles/get_profiles.py), which downloads the JASPAR CORE profiles for different taxons
 * The script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py) takes as its input the `profiles` folder and a nucleotide sequence in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format)</br>(*e.g.* a genome), and outputs TFBS predictions
@@ -14,15 +15,14 @@ This repository contains the data and code used to generate the JASPAR UCSC Geno
 The original scripts used for the publication of [JASPAR 2018](https://doi.org/10.1093/nar/gkx1126) have been placed in the folder [`version-1.0`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/tree/master/version-1.0).
 
 ## Dependencies
-* [GNU parallel](https://www.gnu.org/software/parallel/)
 * [Python 3.7](https://www.python.org/download/releases/3.7/) with the following libraries: [Biopython](http://biopython.org) (<1.74), [NumPy](http://www.numpy.org), [pyfaidx](https://peerj.com/preprints/970/) and [tqdm](https://tqdm.github.io)
 * [PWMScan](http://ccg.vital-it.ch/pwmscan)
 * [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
-Note that for running `scan_sequence.py`, only the Python dependencies and PWMScan are required.
+Note that for running `scan_sequence.py`, only the Python dependencies are required.
 
 ## Installation
-Except for PWMScan, which has to be [downloaded](https://sourceforge.net/projects/pwmscan/), installed, and appended to your `PATH` manually, the remaining dependencies can be installed through the [conda](https://docs.conda.io/en/latest/) package manager:
+Except for PWMScan, whose necessary binaries are already provided in the `bin` folder, the remaining dependencies can be installed through the [conda](https://docs.conda.io/en/latest/) package manager:
 ```
 conda env create -f ./environment.yml
 ```

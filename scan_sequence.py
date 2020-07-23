@@ -21,7 +21,6 @@ __email__ = "oriol@cmmt.ubc.ca"
 __status__ = "Production"
 
 # Globals
-base_name = os.path.basename(__file__)
 pid = os.getpid()
 taxons = ["fungi", "insects", "nematodes", "plants", "vertebrates"]
 
@@ -241,8 +240,9 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
     threads=1, A=0.25, C=0.25, G=0.25, T=0.25, pthresh=0.05, rthresh=0.8):
 
     # Initialize
+    bin_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
     cutoff = None
-    dummy_file = os.path.join(dummy_dir, "%s.%s.%s" % (base_name, pid, profile.matrix_id))
+    dummy_file = os.path.join(dummy_dir, "%s.%s.%s" % (os.path.basename(__file__), pid, profile.matrix_id))
     pwm_file = "%s.pwm" % dummy_file
     tsv_file = "%s.tsv" % dummy_file
     gzipped_file = "%s.gz" % tsv_file
@@ -266,7 +266,7 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
                 f.write("%s\n" % "\t".join([str(int(profile.pssm[j][i]*100)) for j in "ACGT"]))
 
         # Calculate distribution of PWM scores
-        cmd = "matrix_prob %s" % pwm_file
+        cmd = "%s %s" % (os.path.join(bin_dir, "matrix_prob"), pwm_file)
         process = subprocess.run([cmd], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         with open(tsv_file, "w") as f:
@@ -288,7 +288,7 @@ def _scan_profile(profile, fasta_file, dummy_dir="/tmp/", output_dir="./",
                         cutoff = score
 
         # Scan FASTA file
-        cmd_1 = "matrix_scan -m %s -c %s %s" % (pwm_file, cutoff, fasta_file)
+        cmd_1 = "%s -m %s -c %s %s" % (os.path.join(bin_dir, "matrix_scan"), pwm_file, cutoff, fasta_file)
         cmd_2 = "gzip > %s" % gzipped_file
         cmd = '''%s | awk -v score_tab="%s" -v name="%s" 'BEGIN { while((getline line < score_tab) > 0 ) {split(line,f," "); scores[f[1]]=f[2]; pvalues[f[1]]=f[3]} close(score_tab) } {print $1"\t"$2"\t"$3"\t"name"\t"scores[$5]"\t"pvalues[$5]"\t"$6}' | %s''' % (cmd_1, tsv_file, profile.name, cmd_2)
         subprocess.call(cmd, shell=True, stderr=subprocess.STDOUT)
