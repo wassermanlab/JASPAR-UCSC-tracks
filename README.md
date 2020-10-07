@@ -5,9 +5,9 @@ This repository contains the data and code used to generate the JASPAR UCSC Geno
 01/07/2018 To speed-up TFBS predictions, we switched from [MEME](http://meme-suite.org/doc/overview.html) and the [Perl TFBS](http://tfbs.genereg.net) package to [PWMScan](http://ccg.vital-it.ch/pwmscan).
 
 ## Content
-* The `bin` folder contains binaries required by the script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py)
 * The `genomes` folder contains scripts to download and process different genome assemblies
 * The `profiles` folder contains the output from the script [`get_profiles.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/profiles/get_profiles.py), which downloads the JASPAR CORE profiles for different taxons
+* The `pwmscan` folder contains a script to download and install PWMscan, whose binaries are required by the script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py)
 * The script [`scan_sequence.py`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scan_sequence.py) takes as its input the `profiles` folder and a nucleotide sequence in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format)</br>(*e.g.* a genome), and outputs TFBS predictions
 * The script [`scans2bigBed`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/scans2bigBed) creates a [bigBed track file](https://genome.ucsc.edu/goldenPath/help/bigBed.html) from TFBS predictions
 * The file [`environment.yml`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/environment.yml) contains the conda environment used to generate the genomic tracks for JASPAR 2020 (see installation)
@@ -19,10 +19,12 @@ The original scripts used for the publication of [JASPAR 2018](https://doi.org/1
 * [PWMScan](http://ccg.vital-it.ch/pwmscan)
 * [UCSC binaries](http://hgdownload.cse.ucsc.edu/admin/exe/) for standalone command-line use
 
-Note that for running `scan_sequence.py`, only the Python dependencies are required.
+Note that for running `scan_sequence.py`, only the Python dependencies and PWMScan are required.
 
 ## Installation
-Except for PWMScan, whose necessary binaries are already provided in the `bin` folder, the remaining dependencies can be installed through the [conda](https://docs.conda.io/en/latest/) package manager:
+To install PWMScan, execute the script [`install-pwmscan.sh`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/pwmscan/install-pwmscan.sh) provided in the `pwmscan` folder.
+
+The remaining dependencies can be installed through the [conda](https://docs.conda.io/en/latest/) package manager:
 ```
 conda env create -f ./environment.yml
 ```
