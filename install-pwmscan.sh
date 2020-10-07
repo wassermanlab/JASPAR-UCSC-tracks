@@ -18,7 +18,7 @@ cd pwmscan
 mkdir -p bin
 make clean && make cleanbin
 make && make install
-cp -r ./bin/* ../
+cp -r ./bin/matrix_prob ./bin/matrix_scan ../
 cd ..
-#rm -rf pwmscan
+rm -rf pwmscan
 rm pwmscan.1.1.9.tar.gz
