@@ -18,6 +18,7 @@ cd pwmscan
 mkdir -p bin
 make clean && make cleanbin
 make && make install
-cp ./bin/* ../
+cp -r ./bin/* ../
 cd ..
-rm -rf pwmscan
+#rm -rf pwmscan
+rm pwmscan.1.1.9.tar.gz
