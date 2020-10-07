@@ -22,7 +22,7 @@ The original scripts used for the publication of [JASPAR 2018](https://doi.org/1
 Note that for running `scan_sequence.py`, only the Python dependencies and PWMScan are required.
 
 ## Installation
-To install PWMScan, execute the script [`install-pwmscan.sh`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/install-pwmscan.sh) provided in the `pwmscan` folder.
+To install PWMScan, execute the script [`install-pwmscan.sh`](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/install-pwmscan.sh).
 
 The remaining dependencies can be installed through the [conda](https://docs.conda.io/en/latest/) package manager:
 ```
