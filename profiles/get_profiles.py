@@ -33,6 +33,7 @@ def get_profiles(devel=False, output_dir="./"):
     """
 
     # Initialize
+    version = 2020
     cwd = os.getcwd()
     taxons = ["fungi", "insects", "nematodes", "plants", "vertebrates"]
 
@@ -54,16 +55,16 @@ def get_profiles(devel=False, output_dir="./"):
             os.chdir(taxon_dir)
 
             # Get JASPAR profiles
-            url = "http://jaspar.genereg.net/download/CORE/JASPAR2018_CORE_%s_redundant_pfms_jaspar.zip" % taxon
+            url = "http://jaspar.genereg.net/download/CORE/JASPAR%s_CORE_%s_redundant_pfms_jaspar.zip" % (version, taxon)
             if devel:
-                url = "http://hfaistos.uio.no:8002/download/CORE/JASPAR2020_CORE_%s_redundant_pfms_jaspar.zip" % taxon
+                url = "http://hfaistos.uio.no:8002/download/CORE/JASPAR%s_CORE_%s_redundant_pfms_jaspar.zip" % (version, taxon)
 
             os.system("curl --silent -O %s" % url)
 
             # Unzip
-            file_name = "JASPAR2018_CORE_%s_redundant_pfms_jaspar.zip" % taxon
+            file_name = "JASPAR%s_CORE_%s_redundant_pfms_jaspar.zip" % (version, taxon)
             if devel:
-                file_name = "JASPAR2020_CORE_%s_redundant_pfms_jaspar.zip" % taxon
+                file_name = "JASPAR%s_CORE_%s_redundant_pfms_jaspar.zip" % (version, taxon)
             os.system("unzip -qq %s" % file_name)
 
             # Remove zip files
