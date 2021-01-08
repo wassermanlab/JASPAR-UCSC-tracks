@@ -228,7 +228,6 @@ def _scan_profiles(profiles, fasta_file, dummy_dir="/tmp/", output_dir="./",
 
     # Parallelize scanning
     kwargs = {
-        "desc": "Scan profiles",
         "total": len(profiles),
         "ncols": 100
     }
