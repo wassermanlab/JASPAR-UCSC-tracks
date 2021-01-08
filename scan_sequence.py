@@ -226,12 +226,17 @@ def _get_profiles(profiles_dir, latest=False, profile=[], taxon=taxons):
 def _scan_profiles(profiles, fasta_file, dummy_dir="/tmp/", output_dir="./",
     threads=1, A=0.25, C=0.25, G=0.25, T=0.25, pthresh=0.05, rthresh=0.8):
 
-    # Parallelize scan
+    # Parallelize scanning
+    kwargs = {
+        "desc": "Scan profiles",
+        "total": len(profiles),
+        "ncols": 100
+    }
     pool = Pool(threads)
-    parallelized = partial(_scan_profile, fasta_file=fasta_file,
-        dummy_dir=dummy_dir, output_dir=output_dir, threads=threads, A=A, C=C,
-        G=G, T=T, pthresh=pthresh, rthresh=rthresh)
-    for _ in tqdm(pool.imap(parallelized, profiles), total=len(profiles)):
+    p = partial(_scan_profile, fasta_file=fasta_file, dummy_dir=dummy_dir,
+        output_dir=output_dir, threads=threads, A=A, C=C, G=G, T=T,
+        pthresh=pthresh, rthresh=rthresh)
+    for _ in tqdm(pool.imap(p, profiles), **kwargs):
         pass
     pool.close()
     pool.join()
