@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/chromFa.tar.gz
 tar xvfz chromFa.tar.gz 
 rm chr*_*.fa chromFa.tar.gz

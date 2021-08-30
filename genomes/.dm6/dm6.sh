@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 wget http://hgdownload.soe.ucsc.edu/goldenPath/dm6/bigZips/dm6.fa.gz 
 gunzip dm6.fa.gz 
 faidx -x dm6.fa

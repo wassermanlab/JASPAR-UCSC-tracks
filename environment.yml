@@ -5,6 +5,7 @@ channels:
   - defaults
 dependencies:
   - biopython=1.73
+  - genomepy
   - git=2.20.1
   - numpy=1.16.4
   - pip=19.2.2
