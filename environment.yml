@@ -5,7 +5,9 @@ channels:
   - defaults
 dependencies:
   - biopython=1.73
-  - genomepy
+  - click=7.1.2
+  - click-option-group=0.5.3
+  - genomepy=0.9.1
   - git=2.20.1
   - numpy=1.16.4
   - perl-math-round=0.07
