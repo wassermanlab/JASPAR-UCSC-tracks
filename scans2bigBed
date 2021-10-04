@@ -104,7 +104,7 @@ LC_ALL=C sort --parallel=$THREADS --buffer-size=${MEM}G -T $DUMMY_DIR -k1,1 -k2,
 ##
 ## Remove BED file
 ##
-rm $BED_FILE
+#rm $BED_FILE
 
 ##
 ## Create bigBed
@@ -114,4 +114,4 @@ bedToBigBed -type=bed6 -tab $SORTED_BED_FILE $CHROM_SIZES $OUT_FILE
 ##
 ## Remove sorted BED file
 ##
-rm $SORTED_BED_FILE
+#rm $SORTED_BED_FILE

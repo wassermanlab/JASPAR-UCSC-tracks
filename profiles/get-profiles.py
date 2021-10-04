@@ -39,11 +39,11 @@ def main():
     # Get profiles
     get_profiles(args.o)
 
-    # Get profile names
-    get_profile_names(args.o)
-
-    # To PWM
+    # Convert profiles to PWMs
     jaspar_to_pwm(args.o)
+
+    # Get profile names
+    get_names(args.o)
 
 def get_profiles(output_dir="./"):
     """
@@ -88,7 +88,42 @@ def get_profiles(output_dir="./"):
             # Return to original directory
             os.chdir(cwd)
 
-def get_profile_names(output_dir="./"):
+def jaspar_to_pwm(output_dir="./"):
+    """
+    For each taxon, this function reformats all profiles from JASPAR to
+    PWMScan format.
+    """
+
+    # Initialize
+    # perl_script = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+    #     "jasparconvert.pl")
+
+    # For each taxon...
+    for taxon in taxons:
+
+        # Initialize
+        taxon_dir = os.path.join(os.path.abspath(output_dir), taxon)
+
+        # For each profile...
+        for f in os.listdir(taxon_dir):
+
+            # Skip non-JASPAR profiles
+            if not f.endswith(".jaspar"):
+                continue
+
+            # JASPAR to PWMScan
+            with open(os.path.join(taxon_dir, f)) as handle:
+                m = motifs.read(handle, "jaspar")
+            m.pseudocounts = motifs.jaspar.calculate_pseudocounts(m)
+            pwm = list(map(list, zip(*[m.pssm[nt] for nt in "ACGT"])))
+            pwm_file = os.path.join(taxon_dir, f"{f[:8]}.pwm")
+            if not os.path.exists(pwm_file):
+                with open(pwm_file, "w") as handle:
+                    for i in pwm:
+                        s = " ".join(["{:7d}".format(round(j*100)) for j in i])
+                        handle.write("%s\n" % s)
+
+def get_names(output_dir="./"):
     """
     This function extracts the name of each JASPAR profile and saves them
     in a JSON file.
@@ -126,65 +161,6 @@ def get_profile_names(output_dir="./"):
         # Write JSON
         with open(json_file, "w") as handle:
             json.dump(names, handle, sort_keys=True, indent=4)
-
-def jaspar_to_pwm(output_dir="./"):
-    """
-    For each taxon, this function reformats all profiles from JASPAR to
-    PWMScan format.
-    """
-
-    # Initialize
-    perl_script = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-        "jasparconvert.pl")
-
-    # For each taxon...
-    for taxon in taxons:
-
-        # Initialize
-        taxon_dir = os.path.join(os.path.abspath(output_dir), taxon)
-
-        # For each profile...
-        for f in os.listdir(taxon_dir):
-
-            # Skip non-JASPAR profiles
-            if not f.endswith(".jaspar"):
-                continue
-
-            # JASPAR to PWMScan
-            matrix_file = os.path.join(taxon_dir, f)
-            pwm_file = os.path.join(taxon_dir, f"{f[:8]}.pwm")
-            options = f"-noheader -o {pwm_file} -w l"
-            cmd = f"{perl_script} {options} {matrix_file}"
-            _ = sp.run([cmd], stdout=sp.DEVNULL, stderr=sp.DEVNULL, shell=True)
-
-def jaspar_to_pwm(output_dir="./"):
-    """
-    For each taxon, this function reformats all profiles from JASPAR to
-    PWMScan format.
-    """
-
-    # Initialize
-    perl_script = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-        "jasparconvert.pl")
-    taxons = ["fungi", "insects", "nematodes", "plants", "urochordates",
-        "vertebrates"]
-
-    # For each taxon...
-    for taxon in taxons:
-
-        # Initialize
-        taxon_dir = os.path.join(os.path.abspath(output_dir), taxon)
-
-        # For each profile...
-        for f in os.listdir(taxon_dir):
-
-            # JASPAR to PWMScan
-            matrix_file = os.path.join(taxon_dir, f)
-            pwm_file = os.path.join(taxon_dir, f"{f[:8]}.pwm")
-            if not os.path.exists(pwm_file):
-                options = f"-noheader -o {pwm_file} -w l"
-                cmd = f"{perl_script} {options} {matrix_file}"
-                sp.run([cmd], stdout=sp.DEVNULL, stderr=sp.DEVNULL, shell=True)
 
 #-------------#
 # Main        #

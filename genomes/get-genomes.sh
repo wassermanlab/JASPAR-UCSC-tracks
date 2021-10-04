@@ -6,7 +6,7 @@ if ! [ -f araTha1/araTha1.fa.sizes ]; then
 	wget https://genome-test.gi.ucsc.edu/~hiram/hubs/Plants/araTha1/araTha1.2bit
 	twoBitToFa araTha1.2bit araTha1.fa
 	faidx -x araTha1.fa
-	faidx araTha1.fa -i chromsizes > araTha1.chrom.sizes
+	faidx araTha1.fa -i chromsizes > araTha1.fa.sizes
 	rm araTha1.2bit chr*.fa
 	cd ..
 fi
