@@ -7,7 +7,7 @@ dependencies:
   - biopython=1.73
   - click=7.1.2
   - click-option-group=0.5.3
-  - genomepy=0.9.1
+  - genomepy=0.14.0
   - git=2.20.1
   - numpy=1.16.4
   - perl-math-round=0.07
