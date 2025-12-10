@@ -16,15 +16,21 @@ from tqdm import tqdm
 # Authorship
 __author__ = "Oriol Fornes"
 __organization__ = "The JASPAR Consortium"
-__version__ = "2021.9.1"
+__version__ = "2025.11.10"
 __maintainer__ = "Oriol Fornes"
-__email__ = "oriol@cmmt.ubc.ca"
+__email__ = "oriol.fornes@gmail.com"
 __status__ = "Production"
 
 # Globals
 pid = os.getpid()
-taxons = ["fungi", "insects", "nematodes", "plants", "urochordates",
-    "vertebrates"]
+taxons = [
+    "fungi",
+    "insects",
+    "nematodes",
+    "plants",
+    "urochordates",
+    "vertebrates"
+]
 
 CONTEXT_SETTINGS = {
     "help_option_names": ["-h", "--help"],

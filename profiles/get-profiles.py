@@ -7,8 +7,14 @@ import os
 import subprocess as sp
 
 # Globals
-taxons = ["fungi", "insects", "nematodes", "plants", "urochordates",
-    "vertebrates"]
+taxons = [
+    "fungi",
+    "insects",
+    "nematodes",
+    "plants",
+    "urochordates",
+    "vertebrates"
+]
 
 #-------------#
 # Functions   #
@@ -28,6 +34,12 @@ def parse_args():
         help="output directory (default = ./)",
         metavar="DIR"
     )
+    parser.add_argument(
+        "-v",
+        default=2024,
+        help="JASPAR version (default = 2024)",
+        metavar="INT"
+    )
 
     return(parser.parse_args())
 
@@ -37,7 +49,7 @@ def main():
     args = parse_args()
 
     # Get profiles
-    get_profiles(args.o)
+    get_profiles(args.o, args.v)
 
     # Convert profiles to PWMs
     jaspar_to_pwm(args.o)
@@ -45,14 +57,13 @@ def main():
     # Get profile names
     get_names(args.o)
 
-def get_profiles(output_dir="./"):
+def get_profiles(output_dir="./", version=2024):
     """
     For each taxon, this function downloads all profiles from the JASPAR CORE
     in JASPAR format.
     """
 
     # Initialize
-    version = 2022
     cwd = os.getcwd()
 
     # Create output directory

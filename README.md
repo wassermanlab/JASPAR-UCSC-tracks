@@ -38,8 +38,8 @@ To illustrate how the genomic tracks are generated, we provide an example for th
 * Download the genome sequence and chromosome sizes (automated in this [script](https://github.com/wassermanlab/JASPAR-UCSC-tracks/blob/master/genomes/sacCer3/sacCer3.sh))
 * Scan the genome sequence using [**all** fungi profiles from the JASPAR CORE](http://jaspar.genereg.net/search?q=&collection=CORE&tax_group=fungi)
 ```
-./scan-sequence.py --fasta-file ./genomes/sacCer3/sacCer3.fa --profiles-dir ./profiles/ \
-    --output-dir ./tracks/sacCer3/ --threads 4 --latest --taxon fungi
+./scan-sequence.py --output-dir ./tracks/sacCer3/ --threads 4 --latest --taxon fungi \
+    ./genomes/sacCer3/sacCer3.fa ./profiles/ 
 ```
 For this example, the scanning step should take no longer than a minute. For human and other similar genomes, this step is usually finished within a few hours (the final amount of time will depend on the number of `--threads` specified).
 * Create the genomic track
